@@ -1,0 +1,1522 @@
+openapi: 3.1.0
+info:
+  title: Meridian Platform API
+  version: 1.0.0
+  description: |
+    Versioned REST API for the Meridian public website, MERIDIAN STUDIO CMS, and
+    the shared publishing pipeline. All responses are JSON unless noted.
+
+    Authentication uses Laravel Sanctum SPA cookies. The Studio must first call
+    `GET /sanctum/csrf-cookie` (outside this versioned prefix), then send the
+    `X-XSRF-TOKEN` header on writes. Public content endpoints are stateless and
+    require the `X-Site` header (site slug) plus an optional `X-Locale` header.
+
+    Demo content, figures, and outcomes are illustrative.
+  contact:
+    name: Meridian Platform Team
+    email: platform@meridian.example
+  license:
+    name: Proprietary demonstration project
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development
+  - url: https://api.meridian.example/api/v1
+    description: Illustrative production host
+
+tags:
+  - name: Auth
+  - name: Public
+  - name: Pages
+  - name: Workflow
+  - name: Media
+  - name: Content
+  - name: Forms and leads
+  - name: SEO
+  - name: Access
+  - name: Settings
+
+security:
+  - sanctumCookie: []
+
+paths:
+  /health:
+    get:
+      tags: [Public]
+      summary: Liveness and database check
+      security: []
+      responses:
+        '200':
+          description: Service and database are healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, enum: [ok, degraded] }
+                  database: { type: string, enum: [ok, unavailable] }
+                  version: { type: string }
+                  time: { type: string, format: date-time }
+        '503':
+          description: Database unavailable
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Start a Sanctum SPA session
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+                remember: { type: boolean, default: false }
+      responses:
+        '200':
+          description: Authenticated user and effective permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/User' }
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: End the session
+      responses:
+        '200':
+          description: Signed out
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Current user, sites, roles, and permissions
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/User' }
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+
+  /public/bootstrap:
+    get:
+      tags: [Public]
+      summary: Site identity, enabled locales, navigation, public settings
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+      responses:
+        '200':
+          description: Bootstrap payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      site: { $ref: '#/components/schemas/Site' }
+                      locales:
+                        type: array
+                        items: { $ref: '#/components/schemas/Locale' }
+                      current_locale: { type: string }
+                      navigation: { type: object, additionalProperties: true }
+                      settings: { type: object, additionalProperties: true }
+                      organization: { type: object, additionalProperties: true }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /public/home:
+    get:
+      tags: [Public]
+      summary: Published homepage for a locale
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+      responses:
+        '200':
+          description: Homepage payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/PagePayload' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /public/pages/{slug}:
+    get:
+      tags: [Public]
+      summary: Published page by localized slug
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Page payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/PagePayload' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /public/preview/{token}:
+    get:
+      tags: [Public]
+      summary: Render a preview token issued by the CMS
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Preview payload
+        '404':
+          description: Invalid or expired preview token
+
+  /public/solutions:
+    get:
+      tags: [Public]
+      summary: Published solutions
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+      responses:
+        '200':
+          description: Solution collection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/CollectionCard' }
+
+  /public/solutions/{slug}:
+    get:
+      tags: [Public]
+      summary: Published solution detail
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Solution detail }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/industries:
+    get:
+      tags: [Public]
+      summary: Published industries
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+      responses:
+        '200': { description: Industry collection }
+
+  /public/industries/{slug}:
+    get:
+      tags: [Public]
+      summary: Published industry detail
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Industry detail }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/case-studies:
+    get:
+      tags: [Public]
+      summary: Published case studies
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: industry
+          in: query
+          schema: { type: string }
+        - name: solution
+          in: query
+          schema: { type: string }
+      responses:
+        '200': { description: Case study collection }
+
+  /public/case-studies/{slug}:
+    get:
+      tags: [Public]
+      summary: Published case study detail
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Case study detail }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/articles:
+    get:
+      tags: [Public]
+      summary: Published insights and news
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: type
+          in: query
+          schema: { type: string, enum: [insight, news] }
+        - name: category
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200': { description: Article collection }
+
+  /public/articles/{slug}:
+    get:
+      tags: [Public]
+      summary: Published article detail
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Article detail }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/careers:
+    get:
+      tags: [Public]
+      summary: Open roles
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+      responses:
+        '200': { description: Job collection }
+
+  /public/careers/{slug}:
+    get:
+      tags: [Public]
+      summary: Job detail
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Job detail }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/documents:
+    get:
+      tags: [Public]
+      summary: Public documents and reports
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200': { description: Document collection }
+
+  /public/team:
+    get:
+      tags: [Public]
+      summary: Published leadership profiles
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200': { description: Team collection }
+
+  /public/search:
+    get:
+      tags: [Public]
+      summary: Grouped search across pages and editorial content
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 2 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 20, default: 8 }
+      responses:
+        '200':
+          description: Search results grouped by content type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      engine: { type: string, enum: [meilisearch, database] }
+                      groups:
+                        type: array
+                        items: { $ref: '#/components/schemas/SearchGroup' }
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /public/search/suggestions:
+    get:
+      tags: [Public]
+      summary: Lightweight typeahead suggestions
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 2 }
+      responses:
+        '200': { description: Suggestion list }
+
+  /public/sitemap:
+    get:
+      tags: [Public]
+      summary: Localized sitemap entries
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - name: locale
+          in: query
+          schema: { type: string, enum: [th, en, zh-CN] }
+      responses:
+        '200':
+          description: Sitemap entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      urls:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            loc: { type: string, format: uri }
+                            lastmod: { type: string, format: date-time, nullable: true }
+                            changefreq: { type: string }
+                            priority: { type: string }
+
+  /public/sitemap-index:
+    get:
+      tags: [Public]
+      summary: Per-locale sitemap index
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200': { description: Sitemap index entries }
+
+  /public/forms/{key}/submissions:
+    post:
+      tags: [Public]
+      summary: Submit a public form
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - $ref: '#/components/parameters/LocaleHeader'
+        - name: key
+          in: path
+          required: true
+          schema: { type: string, examples: [contact, partnership, general] }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Field names come from the form schema returned by /public/contact.
+              additionalProperties: true
+              properties:
+                consent: { type: boolean }
+                website: { type: string, description: Honeypot; must stay empty. }
+                elapsed_ms: { type: integer, minimum: 0 }
+                page: { type: string }
+      responses:
+        '201':
+          description: Submission accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+                  reference: { type: string, example: MRD-000123 }
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /public/jobs/{slug}/applications:
+    post:
+      tags: [Public]
+      summary: Apply for a role
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, email, consent]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+                phone: { type: string }
+                message: { type: string }
+                consent: { type: boolean }
+                cv:
+                  type: string
+                  format: binary
+      responses:
+        '201': { description: Application accepted }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /public/analytics/events:
+    post:
+      tags: [Public]
+      summary: Record a first-party analytics event
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, examples: [page_view, cta_click, search] }
+                path: { type: string }
+                locale: { type: string }
+                referrer: { type: string }
+                meta: { type: object, additionalProperties: true }
+      responses:
+        '202': { description: Event accepted }
+
+  /admin/dashboard:
+    get:
+      tags: [Pages]
+      summary: CMS dashboard metrics
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200': { description: Dashboard payload }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/pages:
+    get:
+      tags: [Pages]
+      summary: List pages
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - name: status
+          in: query
+          schema: { type: string, enum: [draft, in_review, changes_requested, approved, scheduled, published, archived] }
+        - name: q
+          in: query
+          schema: { type: string }
+        - name: locale
+          in: query
+          schema: { type: string, enum: [th, en, zh-CN] }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1 }
+        - name: per_page
+          in: query
+          schema: { type: integer, minimum: 5, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: Paginated pages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/PageSummary' }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+                  counts: { type: object, additionalProperties: { type: integer } }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [Pages]
+      summary: Create a page
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, locale]
+              properties:
+                title: { type: string, maxLength: 255 }
+                slug: { type: string, maxLength: 255 }
+                locale: { type: string, enum: [th, en, zh-CN] }
+                excerpt: { type: string, maxLength: 2000 }
+                template: { type: string, default: default }
+                parent_id: { type: integer, nullable: true }
+                is_home: { type: boolean }
+                featured_media_id: { type: integer, nullable: true }
+                blocks:
+                  type: array
+                  maxItems: 40
+                  items: { $ref: '#/components/schemas/BlockInput' }
+                seo: { $ref: '#/components/schemas/SeoInput' }
+      responses:
+        '201':
+          description: Page created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/PageDetail' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /admin/pages/{page}:
+    parameters:
+      - $ref: '#/components/parameters/PageId'
+    get:
+      tags: [Pages]
+      summary: Page detail with blocks, SEO, revisions, and capabilities
+      responses:
+        '200':
+          description: Page detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/PageDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Pages]
+      summary: Update a page translation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                slug: { type: string }
+                locale: { type: string, enum: [th, en, zh-CN] }
+                excerpt: { type: string, nullable: true }
+                template: { type: string }
+                lock_version: { type: integer }
+                revision_message: { type: string }
+      responses:
+        '200': { description: Updated page }
+        '409': { description: Lock version conflict }
+        '422': { $ref: '#/components/responses/ValidationError' }
+    delete:
+      tags: [Pages]
+      summary: Delete a page
+      responses:
+        '200': { description: Page deleted }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/pages/{page}/blocks:
+    put:
+      tags: [Pages]
+      summary: Replace all blocks for one locale
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [locale, blocks]
+              properties:
+                locale: { type: string, enum: [th, en, zh-CN] }
+                blocks:
+                  type: array
+                  maxItems: 40
+                  items: { $ref: '#/components/schemas/BlockInput' }
+      responses:
+        '200': { description: Blocks replaced }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /admin/pages/{page}/seo:
+    put:
+      tags: [SEO]
+      summary: Save localized SEO metadata
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SeoInput'
+                - type: object
+                  properties:
+                    locale: { type: string, enum: [th, en, zh-CN] }
+      responses:
+        '200': { description: SEO metadata saved }
+
+  /admin/pages/{page}/submit:
+    post:
+      tags: [Workflow]
+      summary: Submit a draft for review
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string }
+      responses:
+        '200': { description: Page moved to in_review }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /admin/pages/{page}/approve:
+    post:
+      tags: [Workflow]
+      summary: Approve the current review step
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string }
+      responses:
+        '200': { description: Approval recorded }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/pages/{page}/request-changes:
+    post:
+      tags: [Workflow]
+      summary: Return a page to the author with a note
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [note]
+              properties:
+                note: { type: string }
+      responses:
+        '200': { description: Changes requested }
+
+  /admin/pages/{page}/publish:
+    post:
+      tags: [Workflow]
+      summary: Publish immediately
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      responses:
+        '200': { description: Page published }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { description: Review must complete first }
+
+  /admin/pages/{page}/schedule:
+    post:
+      tags: [Workflow]
+      summary: Schedule publication
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [publish_at]
+              properties:
+                publish_at: { type: string, format: date-time }
+      responses:
+        '200': { description: Publication scheduled }
+        '422': { description: Time must be in the future }
+
+  /admin/pages/{page}/unpublish:
+    post:
+      tags: [Workflow]
+      summary: Return a published page to draft
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      responses:
+        '200': { description: Page unpublished }
+
+  /admin/pages/{page}/revisions:
+    get:
+      tags: [Workflow]
+      summary: Revision history
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+      responses:
+        '200': { description: Revision list }
+
+  /admin/pages/{page}/revisions/{revision}/restore:
+    post:
+      tags: [Workflow]
+      summary: Restore a snapshot
+      parameters:
+        - $ref: '#/components/parameters/PageId'
+        - name: revision
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Revision restored }
+
+  /admin/media:
+    get:
+      tags: [Media]
+      summary: List media assets
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - name: q
+          in: query
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string, enum: [image, document] }
+      responses:
+        '200': { description: Media collection }
+    post:
+      tags: [Media]
+      summary: Upload one or more files
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [files]
+              properties:
+                files:
+                  type: array
+                  items: { type: string, format: binary }
+                folder_id: { type: integer }
+                alt: { type: object, additionalProperties: { type: string } }
+                caption: { type: object, additionalProperties: { type: string } }
+                credit: { type: string }
+                license: { type: string }
+                source_url: { type: string, format: uri }
+      responses:
+        '201':
+          description: Uploaded assets (variants generated for images)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/MediaAsset' }
+        '422': { description: Unsupported type or invalid file }
+
+  /admin/media/{asset}:
+    parameters:
+      - name: asset
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Media]
+      summary: Media asset detail
+      responses:
+        '200': { description: Media asset }
+    patch:
+      tags: [Media]
+      summary: Update alt text, credit, or focal point
+      responses:
+        '200': { description: Updated asset }
+    delete:
+      tags: [Media]
+      summary: Delete an unused asset
+      responses:
+        '200': { description: Asset deleted }
+        '409':
+          description: Asset is referenced by published content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: { type: string, example: media_in_use }
+
+  /admin/articles:
+    get:
+      tags: [Content]
+      summary: List articles
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+      responses:
+        '200': { description: Article collection }
+    post:
+      tags: [Content]
+      summary: Create an article
+      responses:
+        '201': { description: Article created }
+
+  /admin/case-studies:
+    get:
+      tags: [Content]
+      summary: List case studies
+      responses:
+        '200': { description: Case study collection }
+    post:
+      tags: [Content]
+      summary: Create a case study
+      responses:
+        '201': { description: Case study created }
+
+  /admin/solutions:
+    get:
+      tags: [Content]
+      summary: List solutions
+      responses:
+        '200': { description: Solution collection }
+
+  /admin/industries:
+    get:
+      tags: [Content]
+      summary: List industries
+      responses:
+        '200': { description: Industry collection }
+
+  /admin/jobs:
+    get:
+      tags: [Content]
+      summary: List job postings
+      responses:
+        '200': { description: Job collection }
+    post:
+      tags: [Content]
+      summary: Create a job posting
+      responses:
+        '201': { description: Job created }
+
+  /admin/documents:
+    get:
+      tags: [Content]
+      summary: List investor and company documents
+      responses:
+        '200': { description: Document collection }
+
+  /admin/team:
+    get:
+      tags: [Content]
+      summary: List team profiles
+      responses:
+        '200': { description: Team collection }
+
+  /admin/navigation:
+    get:
+      tags: [Content]
+      summary: Menus for the current site and locale
+      responses:
+        '200': { description: Menu collection }
+
+  /admin/forms:
+    get:
+      tags: [Forms and leads]
+      summary: List forms and schemas
+      responses:
+        '200': { description: Form collection }
+
+  /admin/submissions:
+    get:
+      tags: [Forms and leads]
+      summary: List public form submissions
+      responses:
+        '200': { description: Submission collection }
+
+  /admin/leads:
+    get:
+      tags: [Forms and leads]
+      summary: List leads
+      parameters:
+        - $ref: '#/components/parameters/SiteHeader'
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: priority
+          in: query
+          schema: { type: string }
+        - name: q
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Lead collection with owners
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Lead' }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+
+  /admin/leads/{lead}:
+    parameters:
+      - name: lead
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Forms and leads]
+      summary: Lead detail with activities
+      responses:
+        '200': { description: Lead detail }
+    patch:
+      tags: [Forms and leads]
+      summary: Update status, owner, or follow-up
+      responses:
+        '200': { description: Lead updated }
+    delete:
+      tags: [Forms and leads]
+      summary: Delete a lead
+      responses:
+        '200': { description: Lead deleted }
+
+  /admin/leads/{lead}/activities:
+    post:
+      tags: [Forms and leads]
+      summary: Add a note or follow-up activity
+      parameters:
+        - name: lead
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, note]
+              properties:
+                type: { type: string, examples: [note, call, email] }
+                note: { type: string }
+      responses:
+        '201': { description: Activity added }
+
+  /admin/seo/health:
+    get:
+      tags: [SEO]
+      summary: SEO health score and issue counts
+      responses:
+        '200': { description: SEO health payload }
+
+  /admin/seo/audit:
+    post:
+      tags: [SEO]
+      summary: Run the deterministic SEO audit
+      responses:
+        '200': { description: Audit completed }
+
+  /admin/seo/issues:
+    get:
+      tags: [SEO]
+      summary: List SEO issues
+      responses:
+        '200': { description: Issue collection }
+
+  /admin/redirects:
+    get:
+      tags: [SEO]
+      summary: List redirects
+      responses:
+        '200': { description: Redirect collection }
+    post:
+      tags: [SEO]
+      summary: Create a redirect
+      responses:
+        '201': { description: Redirect created }
+
+  /admin/users:
+    get:
+      tags: [Access]
+      summary: List users with site roles
+      responses:
+        '200': { description: User collection }
+
+  /admin/roles:
+    get:
+      tags: [Access]
+      summary: List roles and permissions
+      responses:
+        '200': { description: Role collection }
+
+  /admin/audit-logs:
+    get:
+      tags: [Access]
+      summary: Read the audit trail
+      responses:
+        '200': { description: Audit entries }
+
+  /admin/settings:
+    get:
+      tags: [Settings]
+      summary: Current site settings and integration states
+      responses:
+        '200': { description: Settings payload }
+    patch:
+      tags: [Settings]
+      summary: Update site settings
+      responses:
+        '200': { description: Settings updated }
+
+  /admin/integrations/{provider}:
+    put:
+      tags: [Settings]
+      summary: Configure an integration
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema: { type: string, enum: [google_search_console, google_analytics_4, google_tag_manager] }
+      responses:
+        '200': { description: Integration saved }
+        '422': { description: Credentials rejected or unverifiable }
+
+  /admin/workflows:
+    get:
+      tags: [Workflow]
+      summary: List workflow definitions
+      responses:
+        '200': { description: Workflow definitions }
+
+components:
+  securitySchemes:
+    sanctumCookie:
+      type: apiKey
+      in: cookie
+      name: laravel_session
+      description: |
+        Sanctum SPA session cookie. Obtain it through `GET /sanctum/csrf-cookie`
+        followed by `POST /auth/login`, then send `X-XSRF-TOKEN` on writes.
+
+  parameters:
+    SiteHeader:
+      name: X-Site
+      in: header
+      required: true
+      description: Site slug, for example `meridian`.
+      schema: { type: string, default: meridian }
+    LocaleHeader:
+      name: X-Locale
+      in: header
+      required: false
+      description: Content locale. Defaults to the site default (Thai).
+      schema: { type: string, enum: [th, en, zh-CN] }
+    PageId:
+      name: page
+      in: path
+      required: true
+      schema: { type: integer }
+
+  responses:
+    Unauthenticated:
+      description: No active session
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: The user lacks the required site-scoped permission
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found for this site
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ValidationError' }
+    TooManyRequests:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+        code: { type: string }
+    ValidationError:
+      type: object
+      properties:
+        message: { type: string, example: The submitted data is invalid. }
+        code: { type: string, example: validation_error }
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+
+    Locale:
+      type: object
+      properties:
+        code: { type: string }
+        route: { type: string }
+        label: { type: string }
+        short: { type: string }
+        html: { type: string }
+        is_default: { type: boolean }
+
+    Site:
+      type: object
+      properties:
+        name: { type: string }
+        legal_name: { type: string }
+        slug: { type: string }
+        default_locale: { type: string }
+        brand: { type: object, additionalProperties: true }
+        theme: { type: object, additionalProperties: true }
+        demo_mode: { type: boolean }
+
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string, format: email }
+        job_title: { type: string, nullable: true }
+        locale: { type: string, nullable: true }
+        initials: { type: string }
+        is_super_admin: { type: boolean }
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              name: { type: string }
+              slug: { type: string }
+              level: { type: integer }
+              site_id: { type: integer, nullable: true }
+        permissions:
+          type: array
+          items: { type: string }
+        sites:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              name: { type: string }
+              slug: { type: string }
+              domain: { type: string, nullable: true }
+              default_locale: { type: string }
+              enabled_locales:
+                type: array
+                items: { type: string }
+        current_site_id: { type: integer, nullable: true }
+        notifications_unread: { type: integer }
+
+    Seo:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        canonical: { type: string, format: uri }
+        focus_keyword: { type: string, nullable: true }
+        robots: { type: string, example: index,follow }
+        schema_type: { type: string, example: WebPage }
+        og:
+          type: object
+          properties:
+            title: { type: string }
+            description: { type: string }
+            image: { type: string, format: uri, nullable: true }
+            type: { type: string }
+        schema:
+          type: array
+          items: { type: object, additionalProperties: true }
+
+    SeoInput:
+      type: object
+      properties:
+        title: { type: string, maxLength: 255 }
+        description: { type: string, maxLength: 500 }
+        canonical: { type: string, format: uri, nullable: true }
+        focus_keyword: { type: string, nullable: true }
+        og_title: { type: string, nullable: true }
+        og_description: { type: string, nullable: true }
+        og_image_id: { type: integer, nullable: true }
+        robots: { type: string, example: index,follow }
+        schema_type: { type: string, example: WebPage }
+
+    BlockInput:
+      type: object
+      required: [type]
+      properties:
+        block_uid: { type: string, nullable: true }
+        type: { type: string, description: One of the server-side block registry keys. }
+        props:
+          type: object
+          additionalProperties: true
+        is_visible_desktop: { type: boolean, default: true }
+        is_visible_tablet: { type: boolean, default: true }
+        is_visible_mobile: { type: boolean, default: true }
+        responsive:
+          type: object
+          nullable: true
+          properties:
+            desktop: { type: boolean }
+            tablet: { type: boolean }
+            mobile: { type: boolean }
+            overrides: { type: object, additionalProperties: true }
+
+    Block:
+      allOf:
+        - $ref: '#/components/schemas/BlockInput'
+        - type: object
+          properties:
+            uid: { type: string }
+            resolved: { type: object, additionalProperties: true, nullable: true }
+
+    Alternate:
+      type: object
+      properties:
+        locale: { type: string }
+        hreflang: { type: string }
+        url: { type: string, format: uri }
+
+    Breadcrumb:
+      type: object
+      properties:
+        label: { type: string }
+        url: { type: string, format: uri }
+
+    PageSummary:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        slug: { type: string }
+        status:
+          type: string
+          enum: [draft, in_review, changes_requested, approved, scheduled, published, archived]
+        is_home: { type: boolean }
+        author: { type: string, nullable: true }
+        updated_at: { type: string, format: date-time }
+        published_at: { type: string, format: date-time, nullable: true }
+        scheduled_at: { type: string, format: date-time, nullable: true }
+        lock_version: { type: integer }
+        locales:
+          type: array
+          items: { type: object }
+        missing_locales:
+          type: array
+          items: { type: string }
+
+    PageCapabilities:
+      type: object
+      properties:
+        edit: { type: boolean }
+        publish: { type: boolean }
+        approve: { type: boolean }
+
+    PageDetail:
+      allOf:
+        - $ref: '#/components/schemas/PageSummary'
+        - type: object
+          properties:
+            excerpt: { type: string, nullable: true }
+            template: { type: string }
+            parent_id: { type: integer, nullable: true }
+            blocks:
+              type: array
+              items: { $ref: '#/components/schemas/Block' }
+            seo: { $ref: '#/components/schemas/Seo' }
+            revisions: { type: array, items: { type: object } }
+            workflow: { type: object, nullable: true }
+            capabilities: { $ref: '#/components/schemas/PageCapabilities' }
+
+    PagePayload:
+      type: object
+      properties:
+        type: { type: string, example: page }
+        id: { type: integer }
+        template: { type: string }
+        status: { type: string }
+        is_home: { type: boolean }
+        locale: { type: string }
+        content_locale: { type: string }
+        is_fallback: { type: boolean }
+        title: { type: string }
+        slug: { type: string }
+        excerpt: { type: string, nullable: true }
+        url: { type: string }
+        published_at: { type: string, format: date-time, nullable: true }
+        updated_at: { type: string, format: date-time, nullable: true }
+        featured_image: { $ref: '#/components/schemas/MediaAsset', nullable: true }
+        blocks:
+          type: array
+          items: { $ref: '#/components/schemas/Block' }
+        seo: { $ref: '#/components/schemas/Seo' }
+        breadcrumbs:
+          type: array
+          items: { $ref: '#/components/schemas/Breadcrumb' }
+        alternates:
+          type: array
+          items: { $ref: '#/components/schemas/Alternate' }
+        preview: { type: boolean }
+
+    MediaAsset:
+      type: object
+      properties:
+        id: { type: integer }
+        url: { type: string, format: uri }
+        alt:
+          type: object
+          additionalProperties: { type: string }
+        caption:
+          type: object
+          additionalProperties: { type: string }
+        credit: { type: string, nullable: true }
+        width: { type: integer, nullable: true }
+        height: { type: integer, nullable: true }
+        focal_x: { type: number, minimum: 0, maximum: 1 }
+        focal_y: { type: number, minimum: 0, maximum: 1 }
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              url: { type: string, format: uri }
+              width: { type: integer, nullable: true }
+              height: { type: integer, nullable: true }
+
+    CollectionCard:
+      type: object
+      properties:
+        slug: { type: string }
+        title: { type: string }
+        excerpt: { type: string, nullable: true }
+        url: { type: string }
+        image: { $ref: '#/components/schemas/MediaAsset', nullable: true }
+
+    SearchGroup:
+      type: object
+      properties:
+        type: { type: string }
+        label: { type: string }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              title: { type: string }
+              excerpt: { type: string, nullable: true }
+              url: { type: string }
+              type: { type: string }
+
+    Lead:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string, format: email }
+        phone: { type: string, nullable: true }
+        company: { type: string, nullable: true }
+        message: { type: string, nullable: true }
+        source: { type: string }
+        status: { type: string }
+        priority: { type: string, enum: [low, normal, high, urgent] }
+        owner:
+          type: object
+          nullable: true
+          properties:
+            id: { type: integer }
+            name: { type: string }
+        last_activity_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+
+    Pagination:
+      type: object
+      properties:
+        current_page: { type: integer }
+        last_page: { type: integer }
+        per_page: { type: integer }
+        total: { type: integer }

@@ -1,0 +1,218 @@
+[
+    {
+        "name": "hero-facility",
+        "path": "media/seed/hero-facility.webp",
+        "width": 1200,
+        "height": 800,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/hero-facility-thumb.webp",
+                "width": 480,
+                "height": 320
+            },
+            "medium": {
+                "path": "media/seed/variants/hero-facility-medium.webp",
+                "width": 800,
+                "height": 533
+            }
+        },
+        "bytes": 150854,
+        "alt": {
+            "en": "Container ship and gantry cranes at a commercial port",
+            "th": "เรือคอนเทนเนอร์และเครนยกตู้สินค้าที่ท่าเรือพาณิชย์",
+            "zh-CN": "商业港口的集装箱船与龙门吊"
+        },
+        "credit": "Niels Johannes",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Seaforth_Container_Terminal_2022.jpg"
+    },
+    {
+        "name": "manufacturing",
+        "path": "media/seed/manufacturing.webp",
+        "width": 1200,
+        "height": 800,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/manufacturing-thumb.webp",
+                "width": 480,
+                "height": 320
+            },
+            "medium": {
+                "path": "media/seed/variants/manufacturing-medium.webp",
+                "width": 800,
+                "height": 533
+            }
+        },
+        "bytes": 180238,
+        "alt": {
+            "en": "Automotive assembly line in a modern factory",
+            "th": "สายการประกอบยานยนต์ในโรงงานสมัยใหม่",
+            "zh-CN": "现代工厂中的汽车装配线"
+        },
+        "credit": "Marek Slusarczyk (Tupungato)",
+        "license": "CC BY 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:001_Car_factory_assembly_line_-_Opel_factory_in_Gliwice,_Poland.jpg"
+    },
+    {
+        "name": "automation",
+        "path": "media/seed/automation.webp",
+        "width": 1200,
+        "height": 971,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/automation-thumb.webp",
+                "width": 480,
+                "height": 388
+            },
+            "medium": {
+                "path": "media/seed/variants/automation-medium.webp",
+                "width": 800,
+                "height": 647
+            }
+        },
+        "bytes": 73218,
+        "alt": {
+            "en": "Industrial robotic arm on an engineering bench",
+            "th": "แขนหุ่นยนต์อุตสาหกรรมบนโต๊ะวิศวกรรม",
+            "zh-CN": "工程工作台上的工业机械臂"
+        },
+        "credit": "Auledas",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:UR16e_robot_arm.png"
+    },
+    {
+        "name": "infrastructure",
+        "path": "media/seed/infrastructure.webp",
+        "width": 1200,
+        "height": 800,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/infrastructure-thumb.webp",
+                "width": 480,
+                "height": 320
+            },
+            "medium": {
+                "path": "media/seed/variants/infrastructure-medium.webp",
+                "width": 800,
+                "height": 533
+            }
+        },
+        "bytes": 161568,
+        "alt": {
+            "en": "Container cranes above stacked shipping containers",
+            "th": "เครนยกตู้สินค้าเหนือกองตู้คอนเทนเนอร์",
+            "zh-CN": "堆叠集装箱上方的港口起重机"
+        },
+        "credit": "Guilhem Vellut",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Container_crane_@_Container_terminal_@_Harbour_Tour_@_Spido_@_Rotterdam_(30530491716).jpg"
+    },
+    {
+        "name": "logistics",
+        "path": "media/seed/logistics.webp",
+        "width": 1200,
+        "height": 797,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/logistics-thumb.webp",
+                "width": 480,
+                "height": 319
+            },
+            "medium": {
+                "path": "media/seed/variants/logistics-medium.webp",
+                "width": 800,
+                "height": 531
+            }
+        },
+        "bytes": 253902,
+        "alt": {
+            "en": "High-bay warehouse racking and pallets",
+            "th": "ชั้นเก็บสินค้าความสูงสูงและพาเลทในคลังสินค้า",
+            "zh-CN": "高架仓库货架与托盘"
+        },
+        "credit": "FEMA / DHS",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Emergency_Planning_and_Security_%5E_Technological_-_Caguas,_Puerto_Rico,_May_29,_2012_--_FEMA%27s_Logistics_Management_Division_open_the_agency%27s_new,_strategically-located_Caribbean_Di_-_DPLA_-_2587281d6d4d9ff5388ca88f17688f95.jpg"
+    },
+    {
+        "name": "energy",
+        "path": "media/seed/energy.webp",
+        "width": 1200,
+        "height": 800,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/energy-thumb.webp",
+                "width": 480,
+                "height": 320
+            },
+            "medium": {
+                "path": "media/seed/variants/energy-medium.webp",
+                "width": 800,
+                "height": 533
+            }
+        },
+        "bytes": 258498,
+        "alt": {
+            "en": "Electrical substation with transmission infrastructure",
+            "th": "สถานีไฟฟ้าย่อยพร้อมโครงข่ายส่งไฟฟ้า",
+            "zh-CN": "带输电设施的变电站"
+        },
+        "credit": "Saiphani02",
+        "license": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Electrical_substation_of_railways_in_Vizianagaram.jpg"
+    },
+    {
+        "name": "precision",
+        "path": "media/seed/precision.webp",
+        "width": 1200,
+        "height": 932,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/precision-thumb.webp",
+                "width": 480,
+                "height": 373
+            },
+            "medium": {
+                "path": "media/seed/variants/precision-medium.webp",
+                "width": 800,
+                "height": 621
+            }
+        },
+        "bytes": 119292,
+        "alt": {
+            "en": "Five-axis CNC machining centre",
+            "th": "เครื่องกัด CNC ห้าแกน",
+            "zh-CN": "五轴数控加工中心"
+        },
+        "credit": "Wikimedia Commons contributor",
+        "license": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:DeckelMaho-DMU50e-MachiningCenter.jpg"
+    },
+    {
+        "name": "site-plan",
+        "path": "media/seed/site-plan.webp",
+        "width": 1200,
+        "height": 800,
+        "variants": {
+            "thumb": {
+                "path": "media/seed/variants/site-plan-thumb.webp",
+                "width": 480,
+                "height": 320
+            },
+            "medium": {
+                "path": "media/seed/variants/site-plan-medium.webp",
+                "width": 800,
+                "height": 533
+            }
+        },
+        "bytes": 180296,
+        "alt": {
+            "en": "Engineering site plan drawing",
+            "th": "แบบแปลนวิศวกรรมของพื้นที่โครงการ",
+            "zh-CN": "工程场地平面图"
+        },
+        "credit": "US Army Corps of Engineers",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Public_notice_package_-_USACE-p16021coll7-17810.pdf"
+    }
+]

@@ -1,0 +1,238 @@
+name: meridian
+
+x-api-environment: &api-environment
+  APP_NAME: "Meridian API"
+  APP_ENV: production
+  APP_KEY: ${APP_KEY:-base64:Tom/CUI3Bw+E8/a2VmaInjgFMTk0+hoVboUHtCouxzU=}
+  APP_DEBUG: "false"
+  APP_URL: http://localhost:8000
+  APP_LOCALE: th
+  APP_FALLBACK_LOCALE: en
+  LOG_CHANNEL: stderr
+  LOG_LEVEL: info
+  DB_CONNECTION: pgsql
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_DATABASE: ${DB_DATABASE:-meridian}
+  DB_USERNAME: ${DB_USERNAME:-meridian}
+  DB_PASSWORD: ${DB_PASSWORD:-meridian-local}
+  SESSION_DRIVER: redis
+  SESSION_DOMAIN: localhost
+  SESSION_SECURE_COOKIE: "false"
+  SESSION_SAME_SITE: lax
+  CACHE_STORE: redis
+  QUEUE_CONNECTION: redis
+  REDIS_CLIENT: phpredis
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  BROADCAST_CONNECTION: ${BROADCAST_CONNECTION:-log}
+  FILESYSTEM_DISK: s3
+  MEDIA_DISK: s3
+  MEDIA_URL: http://localhost:8000/storage
+  AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-meridian}
+  AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-meridian-local-secret}
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_BUCKET: media
+  AWS_ENDPOINT: http://minio:9000
+  AWS_URL: http://localhost:9000/media
+  AWS_USE_PATH_STYLE_ENDPOINT: "true"
+  SEARCH_DRIVER: meilisearch
+  MEILISEARCH_HOST: http://meilisearch:7700
+  MEILISEARCH_KEY: ${MEILI_MASTER_KEY:-meridian-local-meili-key}
+  PUBLIC_SITE_URL: http://localhost:3002
+  STUDIO_URL: http://localhost:3003
+  CORS_ALLOWED_ORIGINS: http://localhost:3002,http://localhost:3003
+  SANCTUM_STATEFUL_DOMAINS: localhost:3003,127.0.0.1:3003
+  MAIL_MAILER: log
+  DEMO_MODE: "true"
+  RUN_MIGRATIONS: "false"
+  SEED_DEMO: "false"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-meridian}
+      POSTGRES_USER: ${DB_USERNAME:-meridian}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-meridian-local}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-meridian} -d ${DB_DATABASE:-meridian}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-meridian-local-meili-key}
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - meilisearch-data:/meili_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:7700/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  minio:
+    image: bitnamilegacy/minio:latest
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-meridian}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-meridian-local-secret}
+      MINIO_DEFAULT_BUCKETS: media
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/bitnami/minio/data
+
+  minio-init:
+    image: bitnamilegacy/minio-client:latest
+    depends_on:
+      - minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-meridian}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-meridian-local-secret}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"; do
+          echo 'waiting for MinIO…';
+          sleep 2;
+        done;
+        mc mb --ignore-existing local/media;
+        mc anonymous set download local/media;
+        echo 'MinIO bucket ready.';
+
+  api:
+    build:
+      context: ..
+      dockerfile: infrastructure/docker/api/Dockerfile
+    image: meridian/api:local
+    environment:
+      <<: *api-environment
+      RUN_MIGRATIONS: "true"
+      SEED_DEMO: ${SEED_DEMO:-true}
+    volumes:
+      - api-storage:/var/www/html/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  queue:
+    image: meridian/api:local
+    command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=3", "--timeout=90"]
+    environment: *api-environment
+    volumes:
+      - api-storage:/var/www/html/storage
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  scheduler:
+    image: meridian/api:local
+    command: ["php", "artisan", "schedule:work"]
+    environment: *api-environment
+    volumes:
+      - api-storage:/var/www/html/storage
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  reverb:
+    image: meridian/api:local
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    environment:
+      <<: *api-environment
+      BROADCAST_CONNECTION: reverb
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: "8080"
+      REVERB_HOST: localhost
+      REVERB_PORT: "8081"
+      REVERB_SCHEME: http
+    profiles: ["realtime"]
+    ports:
+      - "8081:8080"
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: infrastructure/docker/nginx/Dockerfile
+    image: meridian/nginx:local
+    ports:
+      - "8000:80"
+    volumes:
+      - api-storage:/var/www/html/storage:ro
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  website:
+    build:
+      context: ..
+      dockerfile: infrastructure/docker/website/Dockerfile
+      args:
+        NUXT_PUBLIC_API_BASE: http://localhost:8000/api/v1
+        NUXT_PUBLIC_SITE_URL: http://localhost:3002
+        NUXT_PUBLIC_STUDIO_URL: http://localhost:3003
+    image: meridian/website:local
+    environment:
+      NUXT_PUBLIC_API_BASE: http://localhost:8000/api/v1
+      NUXT_API_INTERNAL_BASE: http://nginx:80/api/v1
+      NUXT_PUBLIC_SITE: meridian
+      NUXT_PUBLIC_SITE_URL: http://localhost:3002
+      NUXT_PUBLIC_STUDIO_URL: http://localhost:3003
+      NUXT_PUBLIC_DEMO_MODE: "true"
+    ports:
+      - "3002:3002"
+    depends_on:
+      nginx:
+        condition: service_started
+    restart: unless-stopped
+
+  studio:
+    build:
+      context: ..
+      dockerfile: infrastructure/docker/studio/Dockerfile
+      args:
+        VITE_API_BASE: http://localhost:8000/api/v1
+    image: meridian/studio:local
+    ports:
+      - "3003:80"
+    depends_on:
+      nginx:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+  meilisearch-data:
+  minio-data:
+  api-storage:

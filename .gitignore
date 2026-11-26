@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+vendor/
+.pnpm-store/
+
+# builds
+.nuxt/
+.output/
+dist/
+apps/studio/dist/
+apps/website/.output/
+
+# env
+.env
+.env.*
+!.env.example
+!.env.testing.example
+
+# runtime
+storage/logs/*
+apps/api/storage/*.key
+apps/api/database/*.sqlite
+apps/api/database/*.sqlite-journal
+apps/api/public/storage
+apps/website/.data
+
+# tooling
+.taste-skill/
+.asset-candidates/
+.DS_Store
+Thumbs.db
+*.log
+playwright-report/
+test-results/
+coverage/
+backups/

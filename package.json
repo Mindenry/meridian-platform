@@ -1,0 +1,22 @@
+{
+  "name": "meridian",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Meridian Industrial Group — corporate website and MERIDIAN STUDIO CMS",
+  "packageManager": "pnpm@10.34.9",
+  "scripts": {
+    "dev": "concurrently -n api,web,studio -c blue,green,magenta \"pnpm dev:api\" \"pnpm dev:website\" \"pnpm dev:studio\"",
+    "dev:api": "cd apps/api && php artisan serve --host=127.0.0.1 --port=8000",
+    "dev:website": "pnpm --filter @meridian/website dev",
+    "dev:studio": "pnpm --filter @meridian/studio dev",
+    "build": "pnpm --filter @meridian/website build && pnpm --filter @meridian/studio build",
+    "lint": "pnpm --filter @meridian/website typecheck && pnpm --filter @meridian/studio typecheck",
+    "test": "cd apps/api && php artisan test",
+    "test:e2e": "pnpm --filter @meridian/e2e test",
+    "db:seed": "cd apps/api && php artisan migrate:fresh --seed",
+    "format": "cd apps/api && ./vendor/bin/pint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

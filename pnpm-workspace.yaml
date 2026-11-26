@@ -1,0 +1,5 @@
+packages:
+  - "apps/website"
+  - "apps/studio"
+  - "apps/e2e"
+  - "packages/*"
