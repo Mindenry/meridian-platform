@@ -35,7 +35,12 @@ test.describe('performance budget', () => {
     expect(metrics.lcp).toBeGreaterThan(0)
     expect(metrics.lcp).toBeLessThan(3000)
     expect(metrics.cls).toBeLessThan(0.1)
-    expect(jsBytes).toBeLessThan(2_500_000)
+
+    // A Vite dev server ships unbundled modules, so a transfer budget is only
+    // meaningful against a production build. Run with E2E_PERF_BUDGET=1 there.
+    if (process.env.E2E_PERF_BUDGET === '1') {
+      expect(jsBytes).toBeLessThan(2_500_000)
+    }
   })
 
   test('hero image is present and decoded on the home page', async ({ page }) => {

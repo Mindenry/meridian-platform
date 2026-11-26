@@ -8,7 +8,7 @@
 | Feature | Pest + Laravel HTTP | Auth, RBAC, workflow, scheduling, validation, media, forms, SEO, search, isolation |
 | End-to-end | Playwright + Chrome | Public rendering, CMS publishing, real submissions, multi-site denial |
 | Accessibility | Playwright + axe-core | WCAG 2.2 A/AA checks on ten templates, the mobile menu, and search |
-| Performance | Playwright + PerformanceObserver | LCP, CLS, JS transfer budget, hero image decode |
+| Performance | Playwright + PerformanceObserver | LCP, CLS, hero decode; optional JS transfer budget against a production build |
 | Build checks | Nuxt/Vite production builds, TypeScript | SSR bundle, Studio bundle, type errors |
 | Static checks | Pint | PHP formatting |
 
@@ -59,7 +59,7 @@ npx playwright test
 | `scheduling-and-isolation.spec.ts` | Schedule a page, run the real scheduler command, verify it publishes. Energy site admin cannot read Meridian admin pages; anonymous admin access returns 401; public content is site-scoped |
 | `ux-regressions.spec.ts` | Desktop primary menu is visible with no “Index” label; mobile **เมนู** menu opens full-screen with navigation and language; header and mobile menu navigation follow the selected language in both directions; language switching after client navigation; mobile language switching; clean fallback URLs; Thai heading metrics; hero actions stay in the first screen; public job detail with structured data |
 | `a11y.spec.ts` | axe-core WCAG 2.2 A/AA scan of twelve templates in three locales, the mobile menu, and the search overlay; visible keyboard focus on the skip link |
-| `performance.spec.ts` | Local LCP below 3s, CLS below 0.1, JS transfer below 2.5 MB, hero image decoded |
+| `performance.spec.ts` | Local LCP below 3s, CLS below 0.1, hero image decoded; with `E2E_PERF_BUDGET=1` against a production build, JS transfer below 2.5 MB |
 | `content-and-consent.spec.ts` | Cookie preference dialog persists granular consent and reopens from the footer; search remembers recent queries; accessibility statement exists in all locales; RSS feeds return items and are advertised in the head; the second site has isolated navigation and pages |
 
 The suite uses the seeded demo database and creates uniquely named fixtures. Page
@@ -77,7 +77,12 @@ with the scheduler command executed inside the API container:
 E2E_DOCKER=1 npx playwright test
 ```
 
-This was verified with 41 passing tests against the running stack.
+This was verified with 41 passing tests against the running stack. The JS
+transfer budget is opt-in because a Vite dev server ships unbundled modules:
+
+```bash
+E2E_DOCKER=1 E2E_PERF_BUDGET=1 npx playwright test
+```
 
 ### Hydration and reveal handling
 
