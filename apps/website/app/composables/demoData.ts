@@ -230,10 +230,10 @@ export async function demoPost(_path: string): Promise<any> {
   const reference = `DEMO-${Date.now().toString(36).toUpperCase()}`
 
   const message = localeCode.value === 'th'
-    ? 'ได้รับข้อความแล้ว นี่คือเดโมแบบ static จึงไม่มีการส่งข้อมูลจริง'
+    ? 'นี่คือเดโมแบบ static จึงไม่มีการส่งข้อมูลจริง'
     : localeCode.value === 'zh-CN'
-      ? '已收到。这是静态演示，没有发送真实数据。'
-      : 'Message received. This is a static demo; no data was sent.'
+      ? '这是静态演示，没有发送真实数据。'
+      : 'This is a static demo; no data was sent.'
 
   return { message, reference }
 }

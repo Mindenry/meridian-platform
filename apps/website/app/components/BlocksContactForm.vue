@@ -21,6 +21,7 @@ const labels = computed(() => ({
   submit: localeCode.value === 'th' ? 'ส่งข้อความ' : localeCode.value === 'zh-CN' ? '发送消息' : 'Send enquiry',
   sending: localeCode.value === 'th' ? 'กำลังส่ง…' : localeCode.value === 'zh-CN' ? '发送中…' : 'Sending…',
   again: localeCode.value === 'th' ? 'ส่งอีกข้อความ' : localeCode.value === 'zh-CN' ? '再发送一条' : 'Send another message',
+  received: localeCode.value === 'th' ? 'ได้รับข้อความแล้ว' : localeCode.value === 'zh-CN' ? '已收到' : 'Message received.',
   required: localeCode.value === 'th' ? 'จำเป็น' : localeCode.value === 'zh-CN' ? '必填' : 'Required',
   error: localeCode.value === 'th' ? 'เกิดข้อผิดพลาด กรุณาลองใหม่' : localeCode.value === 'zh-CN' ? '出现问题，请重试。' : 'Something went wrong. Please try again.',
   department: localeCode.value === 'th' ? 'แผนกที่เกี่ยวข้อง' : localeCode.value === 'zh-CN' ? '相关部门' : 'Related teams',
@@ -109,7 +110,7 @@ function reset() {
         <div class="contact-form__panel" data-reveal>
           <div v-if="success" class="form-success" role="status">
             <span class="form-success__icon"><AppIcon name="check" :size="22" /></span>
-            <h3 class="h3">Message received.</h3>
+            <h3 class="h3">{{ labels.received }}</h3>
             <p>{{ success }}</p>
             <p v-if="successReference" class="mono">REFERENCE {{ successReference }}</p>
             <button type="button" class="btn btn-ghost" @click="reset">{{ labels.again }}</button>
