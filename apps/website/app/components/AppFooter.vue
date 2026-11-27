@@ -51,8 +51,6 @@ function scrollTop() {
 
 <template>
   <footer class="site-footer">
-    <div class="footer-aura" aria-hidden="true" />
-
     <div class="container footer-inner">
       <div class="footer-main">
         <div class="footer-contact">
@@ -85,8 +83,6 @@ function scrollTop() {
             <p class="footer-heading">{{ labels.legal }}</p>
             <NuxtLink v-for="item in menu('footer-legal')" :key="item.url" :to="item.url" class="footer-link">{{ item.label }}</NuxtLink>
             <NuxtLink :to="localePath('accessibility')" class="footer-link">{{ labels.accessibility }}</NuxtLink>
-            <button type="button" class="footer-link footer-link--button" @click="openPreferences">{{ labels.cookies }}</button>
-            <NuxtLink :to="creditPath" class="footer-link">{{ labels.credits }}</NuxtLink>
           </div>
         </nav>
       </div>
@@ -107,6 +103,8 @@ function scrollTop() {
           <p v-if="config.public.demoStatic" class="footer-demo">{{ labels.demoNote }}</p>
         </div>
         <div class="footer-meta">
+          <button type="button" class="footer-utility" @click="openPreferences">{{ labels.cookies }}</button>
+          <NuxtLink :to="creditPath" class="footer-utility">{{ labels.credits }}</NuxtLink>
           <LocaleSwitcher />
           <span class="footer-copy mono">© {{ new Date().getFullYear() }} MERIDIAN</span>
           <button type="button" class="footer-top-link" :aria-label="labels.backToTop" @click="scrollTop">
@@ -130,11 +128,12 @@ function scrollTop() {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(900px 420px at 88% 0%, rgba(240, 82, 31, 0.09), transparent 60%),
-    linear-gradient(180deg, #0e1411 0%, #0a0e0c 62%, #080b09 100%);
+    radial-gradient(760px 380px at 82% 0%, rgba(241, 237, 228, 0.05), transparent 62%),
+    radial-gradient(520px 260px at 92% 0%, rgba(240, 82, 31, 0.035), transparent 60%),
+    var(--ink);
   color: var(--ivory);
-  border-top: 1px solid rgba(241, 237, 228, 0.14);
-  padding-top: clamp(4rem, 7vw, 6.5rem);
+  border-top: 1px solid var(--line-light);
+  padding-top: clamp(2.75rem, 4.5vw, 4rem);
 }
 
 .site-footer::before {
@@ -145,17 +144,6 @@ function scrollTop() {
   width: min(440px, 46%);
   height: 1px;
   background: linear-gradient(90deg, var(--accent), transparent);
-  pointer-events: none;
-}
-
-.footer-aura {
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 52vw;
-  height: 52vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(240, 82, 31, 0.1), transparent 62%);
   pointer-events: none;
 }
 
@@ -176,26 +164,27 @@ function scrollTop() {
 }
 
 .footer-email {
-  margin-top: 1.3rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  width: fit-content;
   max-width: 100%;
+  align-items: center;
+  gap: 0.8rem;
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  font-size: clamp(1.6rem, 3vw, 2.9rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   font-weight: 500;
   border-bottom: 1px solid rgba(241, 237, 228, 0.3);
-  padding-bottom: 0.45rem;
+  padding-bottom: 0.35rem;
   transition: color 220ms ease, border-color 220ms ease;
 }
 
 .footer-email__icon {
   flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
   border: 1px solid rgba(241, 237, 228, 0.3);
@@ -216,23 +205,23 @@ function scrollTop() {
 }
 
 .footer-statement {
-  margin-top: 1.6rem;
-  max-width: 36ch;
-  font-size: 0.95rem;
-  line-height: 1.65;
+  margin-top: 1.1rem;
+  max-width: 38ch;
+  font-size: 0.9rem;
+  line-height: 1.6;
   color: rgba(241, 237, 228, 0.6);
 }
 
 .footer-cta {
-  margin-top: 2rem;
+  margin-top: 1.4rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  min-height: 46px;
-  padding: 0.7rem 1.1rem;
+  gap: 0.65rem;
+  min-height: 44px;
+  padding: 0.6rem 1rem;
   border: 1px solid rgba(241, 237, 228, 0.3);
   border-radius: var(--radius-sm);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--ivory);
   background: rgba(241, 237, 228, 0.04);
@@ -297,9 +286,9 @@ function scrollTop() {
 }
 
 .footer-offices {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-  padding-top: 1.4rem;
-  border-top: 1px solid rgba(241, 237, 228, 0.12);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line-light);
   display: grid;
   grid-template-columns: minmax(0, 0.55fr) minmax(0, 3fr);
   gap: clamp(1.5rem, 3vw, 3rem);
@@ -334,9 +323,9 @@ function scrollTop() {
 }
 
 .footer-bottom {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-  padding-block: 1.6rem 1.8rem;
-  border-top: 1px solid rgba(241, 237, 228, 0.12);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-block: 1.2rem 1.4rem;
+  border-top: 1px solid var(--line-light);
   display: flex;
   justify-content: space-between;
   gap: 2rem;
@@ -385,6 +374,24 @@ function scrollTop() {
   white-space: nowrap;
 }
 
+.footer-utility {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.7rem;
+  color: rgba(241, 237, 228, 0.45);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 160ms ease;
+}
+
+.footer-utility:hover {
+  color: var(--ivory);
+}
+
 .footer-top-link {
   display: inline-flex;
   align-items: center;
@@ -427,11 +434,11 @@ function scrollTop() {
 .footer-wordmark {
   position: relative;
   z-index: 1;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   border-top: 1px solid rgba(241, 237, 228, 0.08);
   overflow: hidden;
   line-height: 0;
-  padding-top: clamp(1rem, 2vw, 2rem);
+  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 
 .footer-wordmark span {
@@ -439,14 +446,13 @@ function scrollTop() {
   width: 100%;
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  font-size: clamp(4.2rem, 16.6vw, 18rem);
-  line-height: 0.72;
+  font-size: clamp(3.2rem, 16.5vw, 15rem);
+  line-height: 0.8;
   letter-spacing: -0.05em;
   font-weight: 500;
   white-space: nowrap;
   text-align: center;
-  transform: translateY(14%);
-  background: linear-gradient(180deg, rgba(241, 237, 228, 0.95) 0%, rgba(241, 237, 228, 0.42) 100%);
+  background: linear-gradient(180deg, rgba(241, 237, 228, 0.95) 0%, rgba(241, 237, 228, 0.6) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -459,15 +465,7 @@ function scrollTop() {
   }
 }
 
-@media (max-width: 980px) {
-  .footer-main {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-nav {
-    gap: 1.5rem;
-  }
-
+@media (max-width: 1100px) {
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
@@ -475,6 +473,16 @@ function scrollTop() {
 
   .footer-meta {
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 980px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-nav {
+    gap: 1.5rem;
   }
 }
 
@@ -506,7 +514,7 @@ function scrollTop() {
   }
 
   .footer-wordmark span {
-    font-size: clamp(3.6rem, 20vw, 7rem);
+    font-size: clamp(3rem, 19vw, 6.5rem);
   }
 }
 
