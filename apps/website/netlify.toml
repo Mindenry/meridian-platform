@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  PNPM_VERSION = "10.34.9"
   NITRO_PRESET = "netlify"
   AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
 
