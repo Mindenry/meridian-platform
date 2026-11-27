@@ -40,6 +40,8 @@ const success = ref<string | null>(null)
 const reference = ref<string | null>(null)
 const startedAt = ref(Date.now())
 
+const { departmentLabel, locationLabel, employmentLabel } = useJobLabels()
+
 const formatDate = (iso?: string | null) => {
   if (!iso) return ''
   return new Intl.DateTimeFormat(
@@ -47,11 +49,6 @@ const formatDate = (iso?: string | null) => {
     { day: 'numeric', month: 'short', year: 'numeric' },
   ).format(new Date(iso))
 }
-
-const employmentLabel = computed(() => {
-  const type = job.value?.employment_type || 'full_time'
-  return copy.value[type === 'full_time' ? 'fullTime' : type === 'part_time' ? 'partTime' : type === 'internship' ? 'internship' : 'contract']
-})
 
 function onFile(event: Event) {
   const target = event.target as HTMLInputElement
@@ -120,12 +117,12 @@ const sectionLabels = computed(() => ({
       <div class="job-hero__grid" aria-hidden="true" />
       <div class="container job-hero__inner">
         <div>
-          <p class="eyebrow">{{ copy.careers }} / {{ job.department }}</p>
+          <p class="eyebrow">{{ copy.careers }} / {{ departmentLabel(job.department) }}</p>
           <h1 class="job-hero__title">{{ job.title }}</h1>
           <p class="job-hero__summary">{{ job.summary }}</p>
           <div class="job-hero__meta mono">
-            <span>{{ job.location }}</span>
-            <span>{{ employmentLabel }}</span>
+            <span>{{ locationLabel(job.location) }}</span>
+            <span>{{ employmentLabel(job.employment_type) }}</span>
             <span>{{ copy.posted }} {{ formatDate(job.posted_at) }}</span>
           </div>
         </div>
@@ -166,9 +163,9 @@ const sectionLabels = computed(() => ({
         <aside class="job-side">
           <div class="job-side__block">
             <p class="mono">{{ copy.jobDetails }}</p>
-            <div class="job-side__row"><span>{{ copy.department }}</span><span>{{ job.department }}</span></div>
-            <div class="job-side__row"><span>{{ copy.location }}</span><span>{{ job.location }}</span></div>
-            <div class="job-side__row"><span>{{ copy.employment }}</span><span>{{ employmentLabel }}</span></div>
+            <div class="job-side__row"><span>{{ copy.department }}</span><span>{{ departmentLabel(job.department) }}</span></div>
+            <div class="job-side__row"><span>{{ copy.location }}</span><span>{{ locationLabel(job.location) }}</span></div>
+            <div class="job-side__row"><span>{{ copy.employment }}</span><span>{{ employmentLabel(job.employment_type) }}</span></div>
             <div v-if="job.closes_at" class="job-side__row"><span>{{ copy.closing }}</span><span>{{ formatDate(job.closes_at) }}</span></div>
           </div>
           <a href="#apply" class="btn">{{ copy.apply }} <AppIcon name="arrow-down" :size="14" /></a>

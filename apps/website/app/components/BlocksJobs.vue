@@ -2,6 +2,7 @@
 import type { Block } from '~/types'
 const props = defineProps<{ block: Block }>()
 const { localeCode } = useLocale()
+const { departmentLabel, locationLabel, employmentLabel } = useJobLabels()
 const p = computed(() => props.block.props)
 const items = computed(() => props.block.resolved?.items ?? [])
 
@@ -10,16 +11,6 @@ const labels = computed(() => ({
   view: localeCode.value === 'th' ? 'ดูรายละเอียด' : localeCode.value === 'zh-CN' ? '查看详情' : 'View role',
   empty: localeCode.value === 'th' ? 'ยังไม่มีตำแหน่งที่เปิดอยู่' : localeCode.value === 'zh-CN' ? '暂无开放职位' : 'No open roles right now.',
 }))
-
-const typeLabel = (type: string) => {
-  const map: Record<string, Record<string, string>> = {
-    full_time: { en: 'Full time', th: '全职', 'zh-CN': '全职' },
-    part_time: { en: 'Part time', th: 'พาร์ทไทม์', 'zh-CN': '兼职' },
-    contract: { en: 'Contract', th: 'สัญญาจ้าง', 'zh-CN': '合同' },
-    internship: { en: 'Internship', th: 'ฝึกงาน', 'zh-CN': '实习' },
-  }
-  return map[type]?.[localeCode.value] || map[type]?.en || type
-}
 </script>
 
 <template>
@@ -34,9 +25,9 @@ const typeLabel = (type: string) => {
 
       <div v-if="items.length" class="jobs__list">
         <NuxtLink v-for="job in items" :key="job.id" :to="job.url" class="job-row" data-reveal>
-          <span class="job-row__dept mono">{{ job.department }}</span>
+          <span class="job-row__dept mono">{{ departmentLabel(job.department) }}</span>
           <span class="job-row__title">{{ job.title }}</span>
-          <span class="job-row__meta">{{ job.location }} · {{ typeLabel(job.employment_type) }}</span>
+          <span class="job-row__meta">{{ locationLabel(job.location) }} · {{ employmentLabel(job.employment_type) }}</span>
           <span class="job-row__status mono">{{ labels.open }}</span>
           <span class="job-row__arrow"><AppIcon name="arrow-up-right" :size="18" /></span>
         </NuxtLink>

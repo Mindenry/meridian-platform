@@ -129,7 +129,7 @@ export function useCopy() {
       updated: 'อัปเดต',
       author: 'ผู้เขียน',
       backTo: 'กลับไปที่',
-      fullTime: '全职',
+      fullTime: 'เต็มเวลา',
       partTime: 'พาร์ทไทม์',
       contract: 'สัญญาจ้าง',
       internship: 'ฝึกงาน',
