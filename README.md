@@ -8,6 +8,9 @@ It is a demonstration project. Every company detail, project, figure and outcome
 is illustrative. See [docs/CREDITS.md](docs/CREDITS.md) for image and font
 licences.
 
+Live demo: https://meridian-industrial.netlify.app. The public site is a static
+snapshot with no backend; the CMS tour is at `/en/studio`.
+
 ![Meridian public website](apps/e2e/screenshots/website-home-en.png)
 
 ## Stack
