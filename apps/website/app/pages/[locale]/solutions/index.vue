@@ -261,10 +261,10 @@ useSimpleSeo({
 }
 
 .process-step {
-  padding: 1.5rem;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  min-height: 240px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
 }
@@ -276,15 +276,15 @@ useSimpleSeo({
 
 .process-step__title {
   margin-top: auto;
-  font-size: 1.25rem;
+  font-size: clamp(1.3rem, 1.7vw, 1.6rem);
   font-weight: 560;
   letter-spacing: -0.025em;
 }
 
 .process-step__body {
-  margin-top: 0.6rem;
-  font-size: 0.82rem;
-  line-height: 1.55;
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
   color: var(--steel-dark);
 }
 

@@ -76,8 +76,9 @@ const items = computed<CaseStudySummary[]>(() => props.block.resolved?.items ?? 
 
 .project-grid__items {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
 }
 
 .project-grid__items--single {
@@ -85,10 +86,26 @@ const items = computed<CaseStudySummary[]>(() => props.block.resolved?.items ?? 
 }
 
 .project-card {
+  grid-column: span 6;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
   min-width: 0;
+}
+
+.project-card--lead {
+  grid-column: 1 / span 7;
+  grid-row: 1 / span 2;
+}
+
+.project-card:nth-child(2) {
+  grid-column: 8 / span 5;
+  grid-row: 1;
+}
+
+.project-card:nth-child(3) {
+  grid-column: 8 / span 5;
+  grid-row: 2;
 }
 
 .project-card__media {
@@ -177,6 +194,14 @@ const items = computed<CaseStudySummary[]>(() => props.block.resolved?.items ?? 
 
   .project-grid__items {
     grid-template-columns: 1fr;
+  }
+
+  .project-card,
+  .project-card--lead,
+  .project-card:nth-child(2),
+  .project-card:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }
 </style>

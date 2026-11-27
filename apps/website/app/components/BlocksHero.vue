@@ -79,6 +79,10 @@ onMounted(async () => {
           <span class="hero__meta-value">{{ item.value }}</span>
         </div>
       </div>
+      <div v-if="p.show_scroll && p.scroll_label" class="hero__scroll" aria-hidden="true">
+        <span class="mono">{{ p.scroll_label }}</span>
+        <span class="hero__scroll-track"><span class="hero__scroll-dot" /></span>
+      </div>
     </div>
   </section>
 </template>
@@ -221,6 +225,51 @@ onMounted(async () => {
   padding-block: 0.9rem 1.1rem;
 }
 
+.hero__scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(241, 237, 228, 0.55);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.hero__scroll-track {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 44px;
+  overflow: hidden;
+  background: rgba(241, 237, 228, 0.2);
+}
+
+.hero__scroll-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 16px;
+  background: var(--accent);
+  animation: hero-scroll-cue 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes hero-scroll-cue {
+  0% {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(44px);
+    opacity: 0;
+  }
+}
+
 .hero__meta-items {
   display: flex;
   flex-wrap: wrap;
@@ -256,6 +305,24 @@ onMounted(async () => {
 
 .hero--center .hero__body {
   margin-inline: auto;
+}
+
+@media (min-width: 1200px) {
+  /* Let the hero image run to the viewport edge while the copy stays on the
+     container line. The frame closes on the left and top only. */
+  .hero__media-wrap {
+    margin-right: calc(var(--gutter) * -1);
+  }
+
+  .hero__media-frame {
+    right: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero__scroll {
+    display: none;
+  }
 }
 
 @media (max-width: 1100px) {

@@ -71,9 +71,8 @@ const items = computed(() => p.value.items ?? [])
 
 .technology__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
 }
 
 .technology--dark .technology__grid {
@@ -82,13 +81,16 @@ const items = computed(() => p.value.items ?? [])
 
 .tech-item {
   display: grid;
-  grid-template-columns: 2rem 1fr auto;
+  grid-template-columns: 2.2rem minmax(0, 1fr) auto;
   gap: 1rem;
   align-items: baseline;
-  padding: 1.35rem 1rem;
-  border-right: 1px solid var(--line);
+  padding: clamp(1.5rem, 2.4vw, 2.1rem) clamp(0.6rem, 1.4vw, 1.2rem);
   border-bottom: 1px solid var(--line);
   transition: background 180ms ease;
+}
+
+.tech-item:nth-child(odd) {
+  border-right: 1px solid var(--line);
 }
 
 .technology--dark .tech-item {
@@ -109,9 +111,18 @@ const items = computed(() => p.value.items ?? [])
 }
 
 .tech-item__name {
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
-  letter-spacing: -0.02em;
-  font-weight: 550;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  transition: color 200ms ease, transform 260ms var(--ease);
+}
+
+.tech-item:hover .tech-item__name {
+  color: var(--accent-text);
+  transform: translateX(4px);
 }
 
 .tech-item__category {
@@ -129,15 +140,15 @@ const items = computed(() => p.value.items ?? [])
   .technology__note {
     grid-column: 1 / -1;
   }
-
-  .technology__grid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 640px) {
   .technology__grid {
     grid-template-columns: 1fr;
+  }
+
+  .tech-item:nth-child(odd) {
+    border-right: 0;
   }
 }
 </style>
