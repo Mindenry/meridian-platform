@@ -157,6 +157,9 @@ for (const locale of locales) {
   const sitemap = await api('/public/sitemap', query)
   store('/public/sitemap', query, sitemap)
 
+  const sitemapIndex = await api('/public/sitemap-index')
+  store('/public/sitemap-index', {}, sitemapIndex)
+
   const pageSlugs = new Set()
 
   for (const entry of sitemap.data?.urls || []) {

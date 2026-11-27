@@ -2,9 +2,8 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const siteUrl = String(config.public.siteUrl).replace(/\/$/, '')
 
-  const response = await $fetch<{ data: Array<{ locale: string; route: string; url: string }> }>(
-    `${internalApiBase()}/public/sitemap-index`,
-    { headers: { Accept: 'application/json', 'X-Site': config.public.site } },
+  const response = await publicApiGet<{ data: Array<{ locale: string; route: string; url: string }> }>(
+    '/public/sitemap-index',
   )
 
   const entries = response.data.map((locale) => `  <sitemap>
