@@ -1,0 +1,39 @@
+# Static portfolio demo: no API, database, or server functions required.
+# Netlify reads this file from the repository root, so the site needs no base
+# directory setting. The full-stack deployment path is in docs/DEPLOYMENT.md.
+[build]
+  command = "pnpm install --frozen-lockfile && pnpm --filter @meridian/website generate"
+  publish = "apps/website/.output/public"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PNPM_VERSION = "10.34.9"
+  NUXT_PUBLIC_DEMO_STATIC = "true"
+  # Keep the output directory the same on Netlify and in CI. Without this the
+  # Nuxt Netlify preset writes to dist/ instead of .output/public.
+  NITRO_PRESET = "static"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+[[headers]]
+  for = "/_nuxt/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/demo-media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/documents/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

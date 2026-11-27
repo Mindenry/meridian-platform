@@ -118,9 +118,10 @@ python -m http.server 4000 --directory .output/public
 
 The CMS, live forms, search indexing and multi-site editing need the Laravel API
 plus PostgreSQL, Redis, object storage and Meilisearch. Netlify cannot run those
-services. `apps/website/netlify.toml` and `apps/studio/netlify.toml` hold the
-front-end build settings; [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) covers the
-API host, CORS, cookies, DNS and the go-live checklist.
+services. `netlify.toml` at the repository root and
+`apps/studio/netlify.toml` hold the front-end build settings;
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) covers the API host, CORS, cookies, DNS
+and the go-live checklist.
 
 ## Tests
 

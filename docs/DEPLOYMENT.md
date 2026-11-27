@@ -27,9 +27,9 @@ indexing, and CMS previews.
 
 1. Push the repository to GitHub.
 2. In Netlify, choose **Add new site → Import an existing project**.
-3. Set the **base directory** to `apps/website`. Netlify reads
-   `apps/website/netlify.toml`, which sets the build command, publish directory,
-   Node and pnpm versions, and security headers.
+3. Leave the base directory empty. The repository root `netlify.toml` sets the
+   build command, publish directory, Node and pnpm versions, and security
+   headers. It installs the monorepo at the root, where the lockfile lives.
 4. Deploy. The default branch is `main`.
 
 The demo reads `apps/website/public/demo` and `apps/website/public/demo-media`.
