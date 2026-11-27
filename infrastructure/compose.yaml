@@ -5,7 +5,7 @@ x-api-environment: &api-environment
   APP_ENV: production
   APP_KEY: ${APP_KEY:-base64:Tom/CUI3Bw+E8/a2VmaInjgFMTk0+hoVboUHtCouxzU=}
   APP_DEBUG: "false"
-  APP_URL: http://localhost:8000
+  APP_URL: ${APP_URL:-http://localhost:8000}
   APP_LOCALE: th
   APP_FALLBACK_LOCALE: en
   LOG_CHANNEL: stderr
@@ -17,8 +17,8 @@ x-api-environment: &api-environment
   DB_USERNAME: ${DB_USERNAME:-meridian}
   DB_PASSWORD: ${DB_PASSWORD:-meridian-local}
   SESSION_DRIVER: redis
-  SESSION_DOMAIN: localhost
-  SESSION_SECURE_COOKIE: "false"
+  SESSION_DOMAIN: ${SESSION_DOMAIN:-localhost}
+  SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-false}
   SESSION_SAME_SITE: lax
   CACHE_STORE: redis
   QUEUE_CONNECTION: redis
@@ -28,23 +28,23 @@ x-api-environment: &api-environment
   BROADCAST_CONNECTION: ${BROADCAST_CONNECTION:-log}
   FILESYSTEM_DISK: s3
   MEDIA_DISK: s3
-  MEDIA_URL: http://localhost:8000/storage
+  MEDIA_URL: ${MEDIA_URL:-http://localhost:8000/storage}
   AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-meridian}
   AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-meridian-local-secret}
   AWS_DEFAULT_REGION: us-east-1
   AWS_BUCKET: media
-  AWS_ENDPOINT: http://minio:9000
-  AWS_URL: http://localhost:9000/media
+  AWS_ENDPOINT: ${AWS_ENDPOINT:-http://minio:9000}
+  AWS_URL: ${AWS_URL:-http://localhost:9000/media}
   AWS_USE_PATH_STYLE_ENDPOINT: "true"
   SEARCH_DRIVER: meilisearch
   MEILISEARCH_HOST: http://meilisearch:7700
   MEILISEARCH_KEY: ${MEILI_MASTER_KEY:-meridian-local-meili-key}
-  PUBLIC_SITE_URL: http://localhost:3002
-  STUDIO_URL: http://localhost:3003
-  CORS_ALLOWED_ORIGINS: http://localhost:3002,http://localhost:3003
-  SANCTUM_STATEFUL_DOMAINS: localhost:3003,127.0.0.1:3003
+  PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:3002}
+  STUDIO_URL: ${STUDIO_URL:-http://localhost:3003}
+  CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3002,http://localhost:3003}
+  SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-localhost:3003,127.0.0.1:3003}
   MAIL_MAILER: log
-  DEMO_MODE: "true"
+  DEMO_MODE: ${DEMO_MODE:-true}
   RUN_MIGRATIONS: "false"
   SEED_DEMO: "false"
 

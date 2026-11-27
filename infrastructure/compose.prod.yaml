@@ -1,0 +1,35 @@
+# Production override. Use together with the base file through prod-up.sh:
+#
+#   APP_URL=https://api.example.com ./infrastructure/prod-up.sh
+#
+# The website and Studio are hosted on Netlify in this profile. Do not use a
+# plain `up` without a service list; the base file defines the local front ends.
+services:
+  api:
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL:?Set APP_URL to the public https API origin}
+      RUN_MIGRATIONS: "true"
+      SEED_DEMO: "false"
+      LOG_CHANNEL: stderr
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-*}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-}
+      OPTIMIZE: "true"
+      SESSION_SECURE_COOKIE: "true"
+      SESSION_SAME_SITE: ${SESSION_SAME_SITE:-lax}
+    restart: always
+
+  queue:
+    restart: always
+
+  scheduler:
+    restart: always
+
+  nginx:
+    restart: always
+
+  # MinIO stays on the private network. Serve media through nginx `/storage`
+  # or an object-storage CDN instead of exposing the console to the internet.
+  minio:
+    ports: !reset []

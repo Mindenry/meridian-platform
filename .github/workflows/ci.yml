@@ -88,6 +88,20 @@ jobs:
       - name: Build Studio
         run: pnpm --filter @meridian/studio build
 
+      - name: Build for Netlify
+        run: pnpm --filter @meridian/website build
+        env:
+          NITRO_PRESET: netlify
+
+      - name: Verify Netlify output
+        run: |
+          test -f apps/website/.netlify/functions-internal/server/main.mjs
+          test -d apps/website/dist/_nuxt
+          test -f apps/studio/dist/index.html
+
+      - name: Validate production Compose
+        run: APP_URL=https://api.example.com docker compose -f infrastructure/compose.yaml -f infrastructure/compose.prod.yaml config > /dev/null
+
   e2e:
     name: End-to-end, accessibility, and performance
     runs-on: ubuntu-latest

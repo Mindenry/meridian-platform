@@ -93,6 +93,16 @@ first if it is running, because both bind ports 8000, 3002 and 3003.
 - **Operations.** Health checks, backup and restore scripts, and a runbook with
   a restore drill. See [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
+## Deploy
+
+The website and Studio deploy to Netlify. The Laravel API does not run on
+Netlify and needs a container host with PostgreSQL, Redis, object storage and
+Meilisearch. `apps/website/netlify.toml` and `apps/studio/netlify.toml` contain
+the build settings and headers.
+
+The full topology, environment matrix, DNS, cookie/CORS rules and go-live
+checklist are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
 ## Tests
 
 ```bash

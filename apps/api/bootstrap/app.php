@@ -21,6 +21,28 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
 
+        // Behind a TLS-terminating proxy, Laravel must read X-Forwarded-* to
+        // generate https URLs and secure cookies. Only enable this when the
+        // API is not directly exposed to the internet.
+        $trustedProxies = env('TRUSTED_PROXIES');
+
+        if ($trustedProxies) {
+            $middleware->trustProxies(
+                at: $trustedProxies === '*'
+                    ? '*'
+                    : array_map('trim', explode(',', $trustedProxies)),
+            );
+        }
+
+        $trustedHosts = env('TRUSTED_HOSTS');
+
+        if ($trustedHosts) {
+            $middleware->trustHosts(
+                at: array_map('trim', explode(',', $trustedHosts)),
+                subdomains: false,
+            );
+        }
+
         $middleware->alias([
             'site' => ResolveSite::class,
             'site.access' => EnsureSiteAccess::class,

@@ -42,4 +42,10 @@ if [ ! -L public/storage ] && [ "${FILESYSTEM_DISK:-public}" = "public" ]; then
     php artisan storage:link || true
 fi
 
+if [ "${OPTIMIZE:-false}" = "true" ]; then
+    php artisan config:cache
+    php artisan view:cache
+    chown -R www-data:www-data storage bootstrap/cache
+fi
+
 exec "$@"
