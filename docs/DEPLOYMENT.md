@@ -69,6 +69,15 @@ TRUSTED_PROXIES=*
 TRUSTED_HOSTS=api.example.com
 LOG_CHANNEL=stderr
 DEMO_MODE=false
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USERNAME=...
+MAIL_PASSWORD=...
+MAIL_FROM_ADDRESS=no-reply@example.com
+MAIL_FROM_NAME="Meridian"
+MAIL_SCHEME=tls
 ```
 
 `TRUSTED_PROXIES=*` is only safe when nginx is behind a private load balancer or

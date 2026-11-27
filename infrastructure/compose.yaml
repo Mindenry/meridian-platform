@@ -43,7 +43,14 @@ x-api-environment: &api-environment
   STUDIO_URL: ${STUDIO_URL:-http://localhost:3003}
   CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3002,http://localhost:3003}
   SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-localhost:3003,127.0.0.1:3003}
-  MAIL_MAILER: log
+  MAIL_MAILER: ${MAIL_MAILER:-log}
+  MAIL_HOST: ${MAIL_HOST:-127.0.0.1}
+  MAIL_PORT: ${MAIL_PORT:-2525}
+  MAIL_USERNAME: ${MAIL_USERNAME:-null}
+  MAIL_PASSWORD: ${MAIL_PASSWORD:-null}
+  MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
+  MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Meridian API}
+  MAIL_SCHEME: ${MAIL_SCHEME:-null}
   DEMO_MODE: ${DEMO_MODE:-true}
   RUN_MIGRATIONS: "false"
   SEED_DEMO: "false"
@@ -136,6 +143,12 @@ services:
         condition: service_healthy
       minio-init:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@fsockopen(\"127.0.0.1\",9000)?0:1);'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
     restart: unless-stopped
 
   queue:
@@ -190,7 +203,7 @@ services:
       - api-storage:/var/www/html/storage:ro
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
   website:
