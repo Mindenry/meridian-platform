@@ -113,6 +113,8 @@ const current = computed(() => items.value[active.value] ?? items.value[0])
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #d9d6cf;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .capabilities__frame {
@@ -166,8 +168,17 @@ const current = computed(() => items.value[active.value] ?? items.value[0])
   gap: 1rem;
   align-items: start;
   padding-block: clamp(1.2rem, 2.2vw, 1.9rem);
+  padding-inline: 0.75rem;
+  margin-inline: -0.75rem;
   border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-sm);
   position: relative;
+  transition: background 220ms ease;
+}
+
+.capability:hover,
+.capability.is-active {
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .capabilities--dark .capability {
@@ -177,10 +188,11 @@ const current = computed(() => items.value[active.value] ?? items.value[0])
 .capability::before {
   content: "";
   position: absolute;
-  left: -1rem;
+  left: 0;
   top: 0;
   bottom: 0;
   width: 2px;
+  border-radius: 2px;
   background: var(--accent);
   transform: scaleY(0);
   transform-origin: top;

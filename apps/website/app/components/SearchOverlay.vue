@@ -307,8 +307,11 @@ function onKeydown(event: KeyboardEvent) {
   position: relative;
   width: min(980px, 100%);
   max-height: 88vh;
-  background: var(--ivory);
-  border: 1px solid var(--line);
+  background: rgba(251, 250, 246, 0.96);
+  backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -360,19 +363,22 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .search-input:focus {
-  outline: 2px solid var(--accent-text);
-  outline-offset: 4px;
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 2px var(--accent-text);
 }
 
 .search-submit {
   width: 48px;
   height: 48px;
   border: 1px solid var(--ink);
+  border-radius: 50%;
   background: var(--ink);
   color: var(--ivory);
+  box-shadow: var(--shadow-xs);
   display: grid;
   place-items: center;
-  transition: background 180ms ease, border-color 180ms ease;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 200ms ease;
 }
 
 .search-submit:hover:not(:disabled) {
@@ -460,16 +466,20 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .search-chip {
-  border: 1px solid var(--line-strong);
-  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
   min-height: 44px;
-  padding: 0.55rem 0.9rem;
+  padding: 0.55rem 0.95rem;
   font-size: 0.85rem;
-  transition: border-color 160ms ease, color 160ms ease;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease, box-shadow 200ms ease;
 }
 
 .search-chip:hover {
-  border-color: var(--ink);
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow-sm);
   color: var(--accent-text);
 }
 

@@ -112,6 +112,38 @@ const readLabel = computed(() => localeCode.value === 'th' ? 'นาที' : lo
   gap: 0.85rem;
   min-width: 0;
   counter-increment: article;
+  padding: 0.85rem 0.9rem 1.15rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: background 220ms ease, box-shadow 240ms var(--ease);
+}
+
+.article-card:hover {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-md);
+}
+
+.article-card__media {
+  border-radius: calc(var(--radius-lg) - 6px);
+  overflow: hidden;
+}
+
+.article-card__media :deep(.media) {
+  border-radius: calc(var(--radius-lg) - 6px);
+  box-shadow: none;
+}
+
+.insights--dark .article-card {
+  background: rgba(241, 237, 228, 0.05);
+  border-color: rgba(241, 237, 228, 0.1);
+  box-shadow: none;
+}
+
+.insights--dark .article-card:hover {
+  background: rgba(241, 237, 228, 0.09);
+  box-shadow: none;
 }
 
 .article-card--lead {

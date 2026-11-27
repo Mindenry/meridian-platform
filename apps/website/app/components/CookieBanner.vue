@@ -58,9 +58,11 @@ const labels = computed(() => ({
   bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 90;
   width: min(380px, calc(100vw - 2rem));
-  background: var(--paper);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 16px 40px rgba(14, 20, 17, 0.14);
+  background: rgba(251, 250, 246, 0.96);
+  backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   padding: 1rem 1.05rem;
   display: flex;
   flex-direction: column;

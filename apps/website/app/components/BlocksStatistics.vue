@@ -56,23 +56,21 @@ const items = computed(() => p.value.items ?? [])
 .statistics__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.statistics--dark .statistics__grid {
-  border-color: var(--line-light);
+  gap: clamp(0.75rem, 1.5vw, 1.1rem);
 }
 
 .stat {
-  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(0.75rem, 1.5vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem) 0;
-  border-right: 1px solid var(--line);
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
   position: relative;
-  transition: background 220ms ease, padding-left 260ms var(--ease);
+  overflow: hidden;
+  transition: background 220ms ease, box-shadow 240ms var(--ease);
 }
 
 .stat::before {
@@ -81,14 +79,15 @@ const items = computed(() => p.value.items ?? [])
   inset: 0 0 auto 0;
   height: 2px;
   background: var(--accent);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 280ms var(--ease);
 }
 
 .stat:hover {
-  background: rgba(240, 82, 31, 0.04);
-  padding-left: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-md);
 }
 
 .stat:hover::before {
@@ -96,15 +95,14 @@ const items = computed(() => p.value.items ?? [])
 }
 
 .statistics--dark .stat {
-  border-color: var(--line-light);
+  background: rgba(241, 237, 228, 0.05);
+  border-color: rgba(241, 237, 228, 0.12);
+  box-shadow: none;
 }
 
 .statistics--dark .stat:hover {
-  background: rgba(241, 237, 228, 0.04);
-}
-
-.stat:last-child {
-  border-right: 0;
+  background: rgba(241, 237, 228, 0.09);
+  box-shadow: none;
 }
 
 .stat__index {
@@ -153,36 +151,11 @@ const items = computed(() => p.value.items ?? [])
   .statistics__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .stat {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .stat:nth-child(2) {
-    border-right: 0;
-  }
-
-  .stat:nth-last-child(-n + 2) {
-    border-bottom: 0;
-  }
 }
 
 @media (max-width: 520px) {
   .statistics__grid {
     grid-template-columns: 1fr;
-  }
-
-  .stat {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .stat:nth-last-child(-n + 2) {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .stat:last-child {
-    border-bottom: 0;
   }
 }
 </style>

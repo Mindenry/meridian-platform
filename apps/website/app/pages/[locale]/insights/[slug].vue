@@ -219,7 +219,10 @@ onMounted(async () => {
   height: 42px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-xs);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--accent-text);
@@ -254,8 +257,11 @@ onMounted(async () => {
 .article-toc {
   position: sticky;
   top: calc(var(--header-h) + 2rem);
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
+  padding: 1.15rem 1.2rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .article-toc > .mono {

@@ -222,11 +222,13 @@ useSimpleSeo({
 }
 
 .filter-chip {
-  border: 1px solid var(--line);
-  background: transparent;
-  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.5rem 0.9rem;
   font-size: 0.78rem;
-  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 200ms ease;
 }
 
 .filter-chip:hover,
@@ -234,18 +236,23 @@ useSimpleSeo({
   background: var(--ink);
   border-color: var(--ink);
   color: var(--ivory);
+  box-shadow: var(--shadow-sm);
 }
 
 .case-search {
   display: flex;
-  border: 1px solid var(--line);
-  background: var(--paper);
+  align-items: center;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-xs);
   min-width: 280px;
 }
 
 .case-search .input {
   border: 0;
   background: transparent;
+  box-shadow: none;
 }
 
 .case-search__button {

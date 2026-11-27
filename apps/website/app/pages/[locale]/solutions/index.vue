@@ -256,17 +256,24 @@ useSimpleSeo({
 .process__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  gap: clamp(0.75rem, 1.5vw, 1.1rem);
 }
 
 .process-step {
-  padding: clamp(1.5rem, 2.4vw, 2rem);
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  min-height: 280px;
+  padding: clamp(1.5rem, 2.2vw, 1.9rem);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow-sm);
+  min-height: 260px;
   display: flex;
   flex-direction: column;
+  transition: background 220ms ease, box-shadow 240ms var(--ease);
+}
+
+.process-step:hover {
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: var(--shadow-md);
 }
 
 .process-step__number {

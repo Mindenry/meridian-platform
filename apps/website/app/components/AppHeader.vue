@@ -228,9 +228,10 @@ onBeforeUnmount(() => {
   position: sticky;
   top: 0;
   z-index: 60;
-  background: var(--paper);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(150%);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 1px 0 rgba(14, 20, 17, 0.03);
   transition: background 240ms var(--ease), border-color 240ms var(--ease), box-shadow 260ms var(--ease);
 }
 
@@ -249,9 +250,9 @@ onBeforeUnmount(() => {
 }
 
 .site-header.is-scrolled {
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  border-bottom-color: var(--line-strong);
-  box-shadow: 0 14px 36px rgba(14, 20, 17, 0.07);
+  background: var(--glass-strong);
+  border-bottom-color: rgba(14, 20, 17, 0.06);
+  box-shadow: var(--shadow-md);
 }
 
 .site-header.is-scrolled::after {
@@ -343,6 +344,7 @@ onBeforeUnmount(() => {
   width: 44px;
   height: 44px;
   border: 1px solid transparent;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink);
   transition: border-color 160ms ease, color 160ms ease, background 160ms ease, transform 140ms var(--ease);
@@ -364,6 +366,7 @@ onBeforeUnmount(() => {
   min-height: 44px;
   padding: 0 0.85rem;
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink);
   font-family: var(--font-sans);
@@ -412,19 +415,23 @@ onBeforeUnmount(() => {
 
 .mega-panel {
   position: absolute;
-  top: var(--header-h);
-  left: 0;
-  right: 0;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 24px 50px rgba(14, 20, 17, 0.08);
+  top: calc(var(--header-h) - 4px);
+  left: 50%;
+  width: min(1160px, calc(100vw - 2.5rem));
+  transform: translateX(-50%);
+  background: rgba(251, 250, 246, 0.97);
+  backdrop-filter: blur(26px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
 .mega-panel__inner {
   display: grid;
   grid-template-columns: 0.8fr 2fr;
   gap: clamp(2rem, 5vw, 5rem);
-  padding-block: 2.2rem 2.5rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.5rem, 3vw, 2.5rem);
 }
 
 .mega-panel__label {
@@ -449,7 +456,7 @@ onBeforeUnmount(() => {
 .mega-panel__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 2rem;
+  gap: 0.15rem 0.75rem;
   list-style: none;
 }
 
@@ -458,16 +465,17 @@ onBeforeUnmount(() => {
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0.7rem;
-  padding-block: 0.75rem;
-  border-bottom: 1px solid var(--line);
+  padding: 0.8rem 0.75rem;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
-  transition: color 160ms ease, padding-left 220ms var(--ease);
+  transition: color 160ms ease, background 160ms ease, padding-left 220ms var(--ease);
 }
 
 .mega-panel__link:hover {
   color: var(--accent-text);
-  padding-left: 0.35rem;
+  background: rgba(14, 20, 17, 0.045);
+  padding-left: 0.95rem;
 }
 
 .mega-enter-active {

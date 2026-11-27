@@ -202,6 +202,8 @@ onMounted(async () => {
   z-index: 1;
   height: 100%;
   aspect-ratio: auto !important;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .hero__media :deep(img) {
@@ -312,6 +314,10 @@ onMounted(async () => {
      container line. The frame closes on the left and top only. */
   .hero__media-wrap {
     margin-right: calc(var(--gutter) * -1);
+  }
+
+  .hero__media {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   }
 
   .hero__media-frame {

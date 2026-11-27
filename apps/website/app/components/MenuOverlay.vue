@@ -215,9 +215,10 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 0.7rem;
   border: 1px solid var(--line-light-strong);
+  border-radius: 999px;
   background: transparent;
   color: var(--ivory);
-  padding: 0.55rem 0.8rem;
+  padding: 0.55rem 0.9rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.1em;

@@ -111,6 +111,11 @@ const items = computed<CaseStudySummary[]>(() => props.block.resolved?.items ?? 
 .project-card__media {
   position: relative;
   overflow: hidden;
+  transition: box-shadow 260ms var(--ease);
+}
+
+.project-card:hover .project-card__media {
+  box-shadow: var(--shadow-md);
 }
 
 .project-card__year {
