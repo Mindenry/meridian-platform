@@ -572,14 +572,35 @@ function onKeydown(event: KeyboardEvent) {
   color: var(--steel);
 }
 
-.search-enter-active,
-.search-leave-active {
+.search-enter-active {
   transition: opacity 200ms ease;
+}
+
+.search-leave-active {
+  transition: opacity 150ms ease;
 }
 
 .search-enter-from,
 .search-leave-to {
   opacity: 0;
+}
+
+.search-enter-active .search-shell {
+  transition: transform 320ms var(--ease), opacity 240ms ease;
+}
+
+.search-enter-from .search-shell {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.985);
+}
+
+.search-leave-active .search-shell {
+  transition: transform 160ms var(--ease), opacity 140ms ease;
+}
+
+.search-leave-to .search-shell {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.995);
 }
 
 @media (max-width: 640px) {

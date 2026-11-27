@@ -17,6 +17,7 @@ const menuOpen = ref(false)
 const megaItem = ref<NavItem | null>(null)
 const closeTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const menuTrigger = ref<HTMLButtonElement | null>(null)
+const scrolled = ref(false)
 
 const ctaLabel = computed(() => {
   if (localeCode.value === 'th') return 'เริ่มโครงการ'
@@ -89,15 +90,25 @@ watch(() => route.fullPath, () => {
   megaItem.value = null
 })
 
-onMounted(() => window.addEventListener('keydown', onKeydown))
+function onScroll() {
+  scrolled.value = window.scrollY > 8
+}
+
+onMounted(() => {
+  onScroll()
+  window.addEventListener('keydown', onKeydown)
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
 onBeforeUnmount(() => {
   clearCloseTimer()
   window.removeEventListener('keydown', onKeydown)
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
 
 <template>
-  <header class="site-header">
+  <header class="site-header" :class="{ 'is-scrolled': scrolled }">
     <div class="container site-header__inner">
       <SiteLogo />
 
@@ -220,6 +231,31 @@ onBeforeUnmount(() => {
   background: var(--paper);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
+  transition: background 240ms var(--ease), border-color 240ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms var(--ease);
+  pointer-events: none;
+}
+
+.site-header.is-scrolled {
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  border-bottom-color: var(--line-strong);
+  box-shadow: 0 14px 36px rgba(14, 20, 17, 0.07);
+}
+
+.site-header.is-scrolled::after {
+  transform: scaleX(1);
 }
 
 .site-header__inner {
@@ -258,6 +294,16 @@ onBeforeUnmount(() => {
   letter-spacing: 0;
   position: relative;
   white-space: nowrap;
+  transition: color 180ms ease, transform 120ms var(--ease);
+}
+
+.primary-nav__link:hover,
+.primary-nav__button[aria-expanded="true"] {
+  color: var(--ink);
+}
+
+.primary-nav__link:active {
+  transform: translateY(1px);
 }
 
 .primary-nav__link::after {
@@ -299,12 +345,16 @@ onBeforeUnmount(() => {
   border: 1px solid transparent;
   background: transparent;
   color: var(--ink);
-  transition: border-color 160ms ease, color 160ms ease;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease, transform 140ms var(--ease);
 }
 
 .icon-button:hover {
   border-color: var(--line);
   color: var(--accent-text);
+}
+
+.icon-button:active {
+  transform: scale(0.94);
 }
 
 .menu-toggle {
@@ -319,13 +369,17 @@ onBeforeUnmount(() => {
   font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 600;
-  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 140ms var(--ease);
 }
 
 .menu-toggle:hover {
   background: var(--ink);
   border-color: var(--ink);
   color: var(--ivory);
+}
+
+.menu-toggle:active {
+  transform: scale(0.97);
 }
 
 .menu-toggle__icon {
@@ -416,15 +470,59 @@ onBeforeUnmount(() => {
   padding-left: 0.35rem;
 }
 
-.mega-enter-active,
+.mega-enter-active {
+  transition: opacity 160ms ease, clip-path 320ms var(--ease);
+}
+
 .mega-leave-active {
-  transition: opacity 160ms ease, transform 200ms var(--ease);
+  transition: opacity 130ms ease, clip-path 170ms var(--ease);
 }
 
 .mega-enter-from,
 .mega-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  clip-path: inset(0 0 100% 0);
+}
+
+.mega-enter-active .mega-panel__intro {
+  animation: mega-copy-in 260ms var(--ease) both;
+}
+
+.mega-enter-active .mega-panel__link {
+  animation: mega-link-in 340ms var(--ease) both;
+}
+
+.mega-enter-active .mega-panel__link:nth-child(1) { animation-delay: 20ms; }
+.mega-enter-active .mega-panel__link:nth-child(2) { animation-delay: 45ms; }
+.mega-enter-active .mega-panel__link:nth-child(3) { animation-delay: 70ms; }
+.mega-enter-active .mega-panel__link:nth-child(4) { animation-delay: 95ms; }
+.mega-enter-active .mega-panel__link:nth-child(5) { animation-delay: 120ms; }
+.mega-enter-active .mega-panel__link:nth-child(6) { animation-delay: 145ms; }
+.mega-enter-active .mega-panel__link:nth-child(7) { animation-delay: 170ms; }
+.mega-enter-active .mega-panel__link:nth-child(8) { animation-delay: 195ms; }
+
+@keyframes mega-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mega-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 1120px) {

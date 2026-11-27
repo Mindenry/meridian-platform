@@ -83,7 +83,7 @@ class CareersSeeder extends Seeder
                     'slug' => 'data-analytics-consultant',
                     'summary' => 'Turn messy operational data into definitions, models, and decisions that survive contact with a real shift.',
                     'description' => $this->doc('You will work between operations and engineering: defining metrics, tracing lineage, building models, and helping teams change the way they decide. The work is as much facilitation as it is SQL.'),
-                    'responsibilities' => ['Facilitate metric definition workshops with operations.', 'Design curated data models and lineage documentation.', 'Build analyses and decision support for production and quality.', 'Test data quality assumptions and surface gaps honestly.', 'Support adoption through training and operating routines.'],
+                    'responsibilities' => ['Run metric definition workshops with operations.', 'Design curated data models and lineage documentation.', 'Build analyses and decision support for production and quality.', 'Test data quality assumptions and surface gaps honestly.', 'Support adoption through training and operating routines.'],
                     'requirements' => ['4+ years in analytics, data engineering, or industrial data.', 'Advanced SQL and a modern BI or notebook workflow.', 'Experience with operational or manufacturing data.', 'Ability to explain uncertainty to non-specialists.', 'Professional Thai and working English.'],
                     'benefits' => ['Hybrid working', 'Conference budget', 'Health insurance', 'Mentoring from senior practice leads'],
                 ],

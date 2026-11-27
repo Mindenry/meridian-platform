@@ -8,7 +8,7 @@ const copy = useCopy()
 const pageCopy = computed(() => ({
   en: {
     eyebrow: 'Industries',
-    title: 'Sector knowledge, not sector guesswork.',
+    title: 'Each sector is constrained differently. We design for that.',
     body: 'We work inside the constraints of each sector: regulation, seasonality, asset life, and the expectations of the people who depend on the operation.',
     meta: ['MANUFACTURING', 'LOGISTICS', 'ENERGY', 'INFRASTRUCTURE', 'PROPERTY'],
     listEyebrow: 'Where we work',
@@ -19,7 +19,7 @@ const pageCopy = computed(() => ({
   },
   th: {
     eyebrow: 'อุตสาหกรรม',
-    title: 'ความรู้เฉพาะอุตสาหกรรม ไม่ใช่การเดา',
+    title: 'แต่ละอุตสาหกรรมมีข้อจำกัดต่างกัน เราออกแบบให้ตรงกับข้อจำกัดนั้น',
     body: 'เราทำงานภายใต้ข้อจำกัดของแต่ละอุตสาหกรรม ทั้งกฎระเบียบ ฤดูกาล อายุสินทรัพย์ และความคาดหวังของผู้ที่พึ่งพาการดำเนินงาน',
     meta: ['การผลิต', 'โลจิสติกส์', 'พลังงาน', 'โครงสร้างพื้นฐาน', 'อสังหาริมทรัพย์'],
     listEyebrow: 'พื้นที่ที่เราทำงาน',
@@ -30,7 +30,7 @@ const pageCopy = computed(() => ({
   },
   'zh-CN': {
     eyebrow: '行业',
-    title: '行业知识，而非行业猜测。',
+    title: '每个行业的约束不同，设计也要随之不同。',
     body: '我们在每个行业的约束内工作：监管、季节性、资产寿命，以及依赖运营的人的期望。',
     meta: ['制造', '物流', '能源', '基础设施', '物业'],
     listEyebrow: '服务领域',

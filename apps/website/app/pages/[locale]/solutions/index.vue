@@ -16,7 +16,7 @@ const copyText = computed(() => ({
     process: [
       ['01', 'Diagnose', 'We establish the operating constraint, the evidence, and the decision that has to change.'],
       ['02', 'Design', 'Architecture, responsibilities, interfaces, and acceptance criteria are written before build.'],
-      ['03', 'Deliver', 'We commission in stages around live operations and test the exception paths, not only the happy path.'],
+      ['03', 'Deliver', 'We commission in stages around live operations and test both the standard path and the exception paths.'],
       ['04', 'Transfer', 'Documentation, training, and measurable capability transfer are part of the scope.'],
     ],
     listEyebrow: 'Capabilities',
@@ -35,7 +35,7 @@ const copyText = computed(() => ({
     process: [
       ['01', 'วินิจฉัย', 'เราระบุข้อจำกัดการดำเนินงาน หลักฐาน และการตัดสินใจที่ต้องเปลี่ยน'],
       ['02', 'ออกแบบ', 'สถาปัตยกรรม ความรับผิดชอบ อินเทอร์เฟซ และเกณฑ์ยอมรับถูกเขียนก่อนลงมือ'],
-      ['03', 'ส่งมอบ', 'เราทดสอบเป็นระยะรอบการดำเนินงานจริง และทดสอบเส้นทางข้อยกเว้น ไม่ใช่แค่เส้นทางปกติ'],
+      ['03', 'ส่งมอบ', 'เราทดสอบเป็นระยะรอบการดำเนินงานจริง ทั้งเส้นทางปกติและเส้นทางข้อยกเว้น'],
       ['04', 'ถ่ายทอด', 'เอกสาร การฝึกอบรม และการถ่ายทอดศักยภาพที่วัดได้เป็นส่วนหนึ่งของขอบเขตงาน'],
     ],
     listEyebrow: 'ขีดความสามารถ',
@@ -54,7 +54,7 @@ const copyText = computed(() => ({
     process: [
       ['01', '诊断', '确认运营约束、证据以及必须改变的决策。'],
       ['02', '设计', '在构建前写清架构、责任、接口与验收标准。'],
-      ['03', '交付', '围绕在线运营分阶段调试，并测试异常路径而非只测正常路径。'],
+      ['03', '交付', '围绕在线运营分阶段调试，既测正常路径，也测异常路径。'],
       ['04', '转移', '文档、培训与可衡量的能力转移属于项目范围。'],
     ],
     listEyebrow: '能力',

@@ -345,7 +345,7 @@ class PageSeeder extends Seeder
                 'scroll' => 'เลื่อนเพื่อดู',
                 'statement_eyebrow' => 'เราคือใคร',
                 'statement_heading' => 'ระบบอุตสาหกรรมมีคุณค่าเมื่อคนที่ดูแลมันเชื่อมั่นในสิ่งที่เกิดขึ้นต่อไป',
-                'statement_body' => 'เมอริเดียนทำงานในจุดที่งานวิศวกรรมพบกับการดำเนินงานจริง งานของเราคือทำให้โรงงาน ระบบ และทีมงานทำงานเป็นระบบเดียวที่ตรวจสอบได้ ซึ่งมักหมายถึงการเปลี่ยนวิธีแลกเปลี่ยนข้อมูลและการตัดสินใจระหว่างกัน',
+                'statement_body' => 'งานของเราคือทำให้โรงงาน ระบบ และทีมงานทำงานเป็นระบบเดียวที่ตรวจสอบได้ ซึ่งมักหมายถึงการเปลี่ยนวิธีแลกเปลี่ยนข้อมูลและการตัดสินใจระหว่างกัน',
                 'statement_aside' => 'เราทำงานตั้งแต่การตรวจวินิจฉัยกระบวนการไปจนถึงการทดสอบระบบ การส่งมอบ และการสนับสนุนระยะยาว ทีมเดียวกันรับผิดชอบตลอดเส้นทาง',
                 'cap_eyebrow' => 'ขีดความสามารถ', 'cap_heading' => 'จากการตรวจสอบกระบวนการ สู่ระบบปฏิบัติการ',
                 'cap_intro' => 'หกสาขาวิชาที่ทำงานร่วมกันเป็นแนวปฏิบัติเดียว ตั้งแต่อุปกรณ์หน้างานจนถึงข้อมูลระดับผู้บริหาร',
@@ -380,7 +380,7 @@ class PageSeeder extends Seeder
                 'scroll' => 'Scroll to explore',
                 'statement_eyebrow' => 'Who we are',
                 'statement_heading' => 'Industrial systems are only valuable when the people running them can trust what happens next.',
-                'statement_body' => 'Meridian works where engineering meets real operations. Our job is to make plants, systems, and teams behave as one accountable operation, which usually means changing how they share data and decisions.',
+                'statement_body' => 'Our job is to make plants, systems, and teams behave as one accountable operation, which usually means changing how they share data and decisions.',
                 'statement_aside' => 'Our work runs from process diagnosis through commissioning, handover, and long-term support. The same team remains accountable across the whole path.',
                 'cap_eyebrow' => 'Capabilities', 'cap_heading' => 'From process audit to operating system.',
                 'cap_intro' => 'Six disciplines working as one practice, from the shop floor to the executive view.',
@@ -415,7 +415,7 @@ class PageSeeder extends Seeder
                 'scroll' => '向下浏览',
                 'statement_eyebrow' => '我们是谁',
                 'statement_heading' => '只有当运营者能够信任下一步会发生什么，工业系统才有价值。',
-                'statement_body' => 'Meridian 在工程与真实运营的交汇处工作。我们的任务是把工厂、系统与团队变成一套可问责的整体运营，这通常意味着改变它们共享数据和做决定的方式。',
+                'statement_body' => '我们的任务是把工厂、系统与团队变成一套可问责的整体运营，这通常意味着改变它们共享数据和做决定的方式。',
                 'statement_aside' => '我们的工作从工艺诊断延伸到调试、移交与长期支持，同一支团队对全过程负责。',
                 'cap_eyebrow' => '能力', 'cap_heading' => '从工艺审计到运营系统。',
                 'cap_intro' => '六个专业作为一个团队协作，从车间现场到管理层视角。',
@@ -585,7 +585,7 @@ class PageSeeder extends Seeder
                 'team_intro' => 'ทีมผู้นำตัวอย่างสำหรับแบรนด์สมมติในพอร์ตโฟลิโอ บทบาทและประวัติย่อเป็นข้อมูลสาธิต',
                 'docs_heading' => 'ข้อมูลองค์กร',
                 'cta_heading' => 'สร้างระบบถัดไปไปกับเรา',
-                'cta_body' => 'เรามองหาวิศวกรและผู้จัดการที่ต้องการทำงานในจุดที่ความแม่นยำทางเทคนิคพบกับผลลัพธ์ทางธุรกิจ',
+                'cta_body' => 'เรามองหาวิศวกรและผู้จัดการที่ใส่ใจทั้งรายละเอียดทางเทคนิคและผลลัพธ์ที่มันสร้างขึ้น',
             ],
             'en' => [
                 'eyebrow' => 'About Meridian',
@@ -613,7 +613,7 @@ class PageSeeder extends Seeder
                 'team_intro' => 'Sample leadership profiles for this fictional portfolio brand. Roles and biographies are demonstration content.',
                 'docs_heading' => 'Corporate information',
                 'cta_heading' => 'Build the next system with us.',
-                'cta_body' => 'We look for engineers and managers who want to work where technical precision meets business outcome.',
+                'cta_body' => 'We look for engineers and managers who care about the technical detail and the result it produces.',
             ],
             'zh-CN' => [
                 'eyebrow' => '关于 Meridian',
@@ -641,7 +641,7 @@ class PageSeeder extends Seeder
                 'team_intro' => '该虚构品牌的示例领导团队。角色与简介为演示内容。',
                 'docs_heading' => '企业信息',
                 'cta_heading' => '与我们共建下一个系统。',
-                'cta_body' => '我们寻找希望在技术精确与业务成果交汇处工作的工程师与管理者。',
+                'cta_body' => '我们寻找既在意技术细节、也在意它带来什么结果的工程师与管理者。',
             ],
         ][$locale];
 
@@ -833,7 +833,7 @@ class PageSeeder extends Seeder
             'th' => [
                 'eyebrow' => 'ร่วมงานกับเรา',
                 'headline' => 'สร้างระบบที่คนอื่นต้องพึ่งพา',
-                'body' => 'เราทำงานในจุดที่ความแม่นยำทางเทคนิคพบกับผลลัพธ์ทางธุรกิจ ถ้าคุณชอบแก้ปัญหาจริง ลงพื้นที่ และเรียนรู้จากคนที่เก่งที่สุดในงานของเขา นี่คือที่ที่คุณจะเติบโต',
+                'body' => 'งานของเราทางเทคนิค และผลลัพธ์ปรากฏที่หน้างาน ถ้าคุณชอบแก้ปัญหาจริง ลงพื้นที่ และเรียนรู้จากคนที่เก่งที่สุดในงานของเขา นี่คือที่ที่คุณจะเติบโต',
                 'culture_heading' => 'วัฒนธรรมการทำงานที่ให้ความสำคัญกับงานฝีมือ',
                 'culture_body' => '<h2>ลงมือทำจริง</h2><p>เราเชื่อว่าวิศวกรที่ดีต้องเห็นหน้างาน เข้าใจผู้ปฏิบัติงาน และยอมรับว่าความจริงมักไม่ตรงกับแบบ</p><h2>ความชัดเจนคือความเมตตา</h2><p>เราเขียนสมมติฐาน การตัดสินใจ และความเสี่ยงให้ชัดเจน เพราะทีมที่ดีที่สุดไม่ต้องเดา</p><h2>เรียนรู้ตลอดชีวิต</h2><p>เรามีระบบพี่เลี้ยง งบการเรียนรู้ และเวลาให้ทดลองสิ่งใหม่โดยไม่ลงโทษความล้มเหลวที่ดี</p>',
                 'values_heading' => 'สิ่งที่เรามอบให้',
@@ -850,7 +850,7 @@ class PageSeeder extends Seeder
             'en' => [
                 'eyebrow' => 'Careers',
                 'headline' => 'Build systems other people depend on.',
-                'body' => 'We work where technical precision meets business outcome. If you like real problems, site time, and learning from people who are excellent at their craft, this is a place to grow.',
+                'body' => 'Our work is technical, and the result shows up on the floor. If you like real problems, site time, and learning from people who are excellent at their craft, this is a place to grow.',
                 'culture_heading' => 'A working culture that values craft.',
                 'culture_body' => '<h2>Do the work</h2><p>We believe good engineers see the site, understand the operator, and accept that reality rarely matches the drawing.</p><h2>Clarity is a kindness</h2><p>We write down assumptions, decisions, and risks because the best teams should not have to guess.</p><h2>Learn continuously</h2><p>We provide mentoring, a learning budget, and room to try new things without punishing good failure.</p>',
                 'values_heading' => 'What we offer',

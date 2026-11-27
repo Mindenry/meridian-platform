@@ -36,13 +36,27 @@ const { localeLinks, localeCode, switchLocale } = useLocale()
 }
 
 .locale-switcher__item {
+  position: relative;
   border: 0;
   background: transparent;
   min-height: 44px;
   min-width: 32px;
   padding: 0.5rem 0.45rem;
   color: var(--steel-dark);
-  transition: color 160ms ease;
+  transition: color 160ms ease, transform 120ms var(--ease);
+}
+
+.locale-switcher__item::after {
+  content: "";
+  position: absolute;
+  left: 0.42rem;
+  right: 0.42rem;
+  bottom: 0.55rem;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 240ms var(--ease);
 }
 
 .locale-switcher__item:hover,
@@ -50,10 +64,13 @@ const { localeLinks, localeCode, switchLocale } = useLocale()
   color: var(--ink);
 }
 
-.locale-switcher__item.is-active {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-color: var(--accent);
+.locale-switcher__item:hover::after,
+.locale-switcher__item.is-active::after {
+  transform: scaleX(1);
+}
+
+.locale-switcher__item:active {
+  transform: translateY(1px);
 }
 
 @media (max-width: 420px) {

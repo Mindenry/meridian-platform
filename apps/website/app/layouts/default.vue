@@ -2,11 +2,12 @@
 const { bootstrap } = await useBootstrap()
 const { localeCode, routeLocale } = useLocale()
 const { trackPageView } = useAnalytics()
+const route = useRoute()
 
 useReveal()
 
 watch(
-  () => useRoute().fullPath,
+  () => route.fullPath,
   () => {
     nextTick(() => trackPageView())
   },
@@ -35,11 +36,13 @@ useHead(() => ({
 
 <template>
   <div class="shell">
-    <NuxtLoadingIndicator color="#f0521f" :height="2" />
+    <AppProgress />
     <a class="skip-link" href="#main-content">{{ skipLabel }}</a>
     <AppHeader :bootstrap="bootstrap" />
     <main id="main-content">
-      <slot />
+      <div :key="route.fullPath" class="page-shell">
+        <slot />
+      </div>
     </main>
     <AppFooter :bootstrap="bootstrap" />
     <SearchOverlay />
