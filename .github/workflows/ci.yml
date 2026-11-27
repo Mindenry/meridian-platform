@@ -88,16 +88,23 @@ jobs:
       - name: Build Studio
         run: pnpm --filter @meridian/studio build
 
-      - name: Build for Netlify
-        run: pnpm --filter @meridian/website build
-        env:
-          NITRO_PRESET: netlify
-
-      - name: Verify Netlify output
+      - name: Build static Netlify demo
         run: |
-          test -f apps/website/.netlify/functions-internal/server/main.mjs
-          test -d apps/website/dist/_nuxt
-          test -f apps/studio/dist/index.html
+          rm -rf apps/website/.output
+          pnpm --filter @meridian/website generate
+        env:
+          NUXT_PUBLIC_DEMO_STATIC: "true"
+
+      - name: Verify static demo output
+        run: |
+          test -f apps/website/.output/public/en/index.html
+          test -f apps/website/.output/public/th/index.html
+          test -f apps/website/.output/public/zh-cn/index.html
+          test -f apps/website/.output/public/demo/api/manifest.json
+          test -f apps/website/.output/public/demo/search.json
+          test -d apps/website/.output/public/demo-media
+          test -f apps/website/.output/public/sitemap.xml
+          test -f apps/website/.output/public/rss.xml
 
       - name: Validate production Compose
         run: APP_URL=https://api.example.com docker compose -f infrastructure/compose.yaml -f infrastructure/compose.prod.yaml config > /dev/null

@@ -1,23 +1,13 @@
+# Static portfolio demo: no API, database, or server functions required.
+# The full-stack deployment path is documented in docs/DEPLOYMENT.md.
 [build]
-  command = "pnpm build"
-  publish = "dist"
+  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @meridian/website generate"
+  publish = ".output/public"
 
 [build.environment]
   NODE_VERSION = "22"
   PNPM_VERSION = "10.34.9"
-  NITRO_PRESET = "netlify"
-  AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
-
-[functions]
-  directory = ".netlify/functions-internal"
-  node_bundler = "none"
-
-# Serve generated static files first, then hand every other path to Nuxt.
-# Nitro writes the handler to .netlify/functions-internal/server.
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
+  NUXT_PUBLIC_DEMO_STATIC = "true"
 
 [[headers]]
   for = "/*"

@@ -167,6 +167,9 @@ inside a framework scope.
 - Consent lives in `useConsent` (analytics flag plus timestamp) and is edited in
   `CookiePreferences.vue`, which can be reopened from the footer.
 - `pages/[locale]/accessibility.vue` is a code-owned statement in three locales.
+- `NUXT_PUBLIC_DEMO_STATIC` switches `useApi` to fixtures in `public/demo` and
+  enables prerendering, so Netlify can serve a full demo without the API.
+- `pages/[locale]/studio.vue` is a static tour of the CMS with real screenshots.
 - `useReveal` runs GSAP only on the client, respects `prefers-reduced-motion`, and
   cancels ScrollTriggers on route change.
 

@@ -1,5 +1,26 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const demoStatic = process.env.NUXT_PUBLIC_DEMO_STATIC === 'true'
+const demoLocales = ['th', 'en', 'zh-cn']
+const demoSeeds = demoLocales.flatMap((locale) => [
+  `/${locale}`,
+  `/${locale}/search`,
+  `/${locale}/accessibility`,
+  `/${locale}/credits`,
+  `/${locale}/studio`,
+])
+const demoFeeds = [
+  '/robots.txt',
+  '/sitemap.xml',
+  '/sitemaps/th.xml',
+  '/sitemaps/en.xml',
+  '/sitemaps/zh-cn.xml',
+  '/rss.xml',
+  '/th/rss.xml',
+  '/en/rss.xml',
+  '/zh-cn/rss.xml',
+]
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-01-01',
   devtools: { enabled: false },
@@ -30,14 +51,16 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Server-side fetches inside Compose must target the service network.
-    apiInternal: process.env.NUXT_API_INTERNAL_BASE || 'http://127.0.0.1:8000/api/v1',
+    // The static demo reads committed fixtures instead.
+    apiInternal: demoStatic ? '' : (process.env.NUXT_API_INTERNAL_BASE || 'http://127.0.0.1:8000/api/v1'),
 
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000/api/v1',
+      apiBase: demoStatic ? '' : (process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000/api/v1'),
       site: process.env.NUXT_PUBLIC_SITE || 'meridian',
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3002',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || process.env.URL || 'http://localhost:3002',
       studioUrl: process.env.NUXT_PUBLIC_STUDIO_URL || 'http://localhost:3003',
       demoMode: process.env.NUXT_PUBLIC_DEMO_MODE !== 'false',
+      demoStatic,
     },
   },
 
@@ -63,6 +86,14 @@ export default defineNuxtConfig({
   nitro: {
     preset: process.env.NITRO_PRESET || undefined,
     compressPublicAssets: true,
+    prerender: demoStatic
+      ? {
+          crawlLinks: true,
+          failOnError: true,
+          routes: [...demoSeeds, ...demoFeeds],
+          ignore: ['/preview/**', '/documents/**'],
+        }
+      : undefined,
   },
 
   experimental: {

@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm build"
+  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @meridian/studio build"
   publish = "dist"
 
 [build.environment]

@@ -19,15 +19,7 @@ const escapeXml = (value: string) => value
  * disagree about which URLs are publishable.
  */
 export async function buildLocaleSitemap(event: H3Event, locale: 'th' | 'en' | 'zh-CN'): Promise<string> {
-  const config = useRuntimeConfig()
-
-  const response = await $fetch<{ data: { urls: SitemapEntry[] } }>(
-    `${internalApiBase()}/public/sitemap`,
-    {
-      headers: { Accept: 'application/json', 'X-Site': config.public.site },
-      query: { locale },
-    },
-  )
+  const response = await publicApiGet<{ data: { urls: SitemapEntry[] } }>('/public/sitemap', { locale })
 
   const urls = response.data.urls.map((entry) => `  <url>
     <loc>${escapeXml(entry.loc)}</loc>

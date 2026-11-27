@@ -97,6 +97,7 @@ export function useAnalytics() {
 
   const track = (event: string, meta?: Record<string, any>) => {
     if (!import.meta.client || consent.value !== 'granted') return
+    if (config.public.demoStatic) return
     if (route.path.includes('/preview/')) return
 
     $fetch(`${config.public.apiBase}/public/analytics/events`, {

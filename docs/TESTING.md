@@ -9,6 +9,7 @@
 | End-to-end | Playwright + Chrome | Public rendering, CMS publishing, real submissions, multi-site denial |
 | Accessibility | Playwright + axe-core | WCAG 2.2 A/AA checks on ten templates, the mobile menu, and search |
 | Performance | Playwright + PerformanceObserver | LCP, CLS, hero decode; optional JS transfer budget against a production build |
+| Static demo | Nuxt generate | Prerenders every route from committed API fixtures; no PHP or database |
 | Build checks | Nuxt/Vite production builds, TypeScript | SSR bundle, Studio bundle, type errors |
 | Static checks | Pint | PHP formatting |
 
@@ -82,6 +83,13 @@ transfer budget is opt-in because a Vite dev server ships unbundled modules:
 
 ```bash
 E2E_DOCKER=1 E2E_PERF_BUDGET=1 npx playwright test
+```
+
+The static demo build is checked without the API:
+
+```bash
+cd apps/website
+NUXT_PUBLIC_DEMO_STATIC=true pnpm generate
 ```
 
 ### Hydration and reveal handling

@@ -33,12 +33,9 @@ export async function buildLocaleRss(event: H3Event, locale: 'th' | 'en' | 'zh-C
   const routeLocale = locale === 'zh-CN' ? 'zh-cn' : locale
   const feedUrl = `${siteUrl}/${routeLocale}/rss.xml`
 
-  const response = await $fetch<{ data: ArticleFeedItem[] }>(
-    `${internalApiBase()}/public/articles`,
-    {
-      headers: { Accept: 'application/json', 'X-Site': config.public.site },
-      query: { locale, per_page: 20 },
-    },
+  const response = await publicApiGet<{ data: ArticleFeedItem[] }>(
+    '/public/articles',
+    { locale, per_page: 20 },
   ).catch(() => ({ data: [] as ArticleFeedItem[] }))
 
   const items = response.data.map((article) => {

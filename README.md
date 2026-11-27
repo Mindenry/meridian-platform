@@ -90,18 +90,37 @@ first if it is running, because both bind ports 8000, 3002 and 3003.
 - **Accessibility.** Axe checks run against twelve templates, the mobile menu
   and search, alongside keyboard tests. The public site states its conformance
   target at `/:locale/accessibility`.
+- **Studio tour.** `/:locale/studio` shows the CMS screens and explains how the
+  editorial workflow, block builder and lead inbox fit together.
 - **Operations.** Health checks, backup and restore scripts, and a runbook with
   a restore drill. See [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
 ## Deploy
 
-The website and Studio deploy to Netlify. The Laravel API does not run on
-Netlify and needs a container host with PostgreSQL, Redis, object storage and
-Meilisearch. `apps/website/netlify.toml` and `apps/studio/netlify.toml` contain
-the build settings and headers.
+### Portfolio demo, no backend
 
-The full topology, environment matrix, DNS, cookie/CORS rules and go-live
-checklist are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+The public site builds as a static snapshot. Netlify runs `pnpm generate` from
+`apps/website`; the build reads committed fixtures in `public/demo`, copies the
+seed media, and prerenders every route. Search, language switching, RSS and
+sitemaps work without the API, and form submissions show a demo confirmation
+instead of sending data.
+
+The Studio tour lives at `/:locale/studio` and uses screenshots of the real CMS.
+Run it locally with:
+
+```bash
+cd apps/website
+NUXT_PUBLIC_DEMO_STATIC=true pnpm generate
+python -m http.server 4000 --directory .output/public
+```
+
+### Full stack
+
+The CMS, live forms, search indexing and multi-site editing need the Laravel API
+plus PostgreSQL, Redis, object storage and Meilisearch. Netlify cannot run those
+services. `apps/website/netlify.toml` and `apps/studio/netlify.toml` hold the
+front-end build settings; [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) covers the
+API host, CORS, cookies, DNS and the go-live checklist.
 
 ## Tests
 

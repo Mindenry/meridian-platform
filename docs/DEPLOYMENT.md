@@ -1,28 +1,88 @@
 # Deployment
 
-The public website and Studio are static/SSR front ends and fit Netlify. The API
-is PHP and cannot run on Netlify; host it on a VPS, Fly.io, Render, Railway, or
-any container platform with PostgreSQL, Redis, object storage and Meilisearch.
+There are two ways to run this project:
 
-## 1. Production topology
-
-```
-www.example.com        Netlify   Nuxt SSR (Netlify Function)
-studio.example.com     Netlify   Vue SPA
-api.example.com        Docker    nginx -> PHP-FPM, queue, scheduler
-                                   PostgreSQL, Redis, Meilisearch, MinIO/S3
-```
-
-Use subdomains of the same registrable domain. Studio authenticates with Sanctum
-cookies, and browsers block cross-site cookies in many configurations.
-
-| Host | Hosts | Required |
+| Mode | What runs | Best for |
 | --- | --- | --- |
-| `www.example.com` | Website | Yes |
-| `studio.example.com` | Studio | Yes |
-| `api.example.com` | API and `/storage` media | Yes |
+| Static demo | Netlify only | Showing the public site and the Studio tour |
+| Full stack | API host plus Netlify or containers | Editing content, collecting leads, testing search |
 
-## 2. API on a container host
+The static demo needs no PHP, database, or object storage. The full stack needs all
+of them.
+
+## 1. Static demo on Netlify
+
+The Nuxt site builds a prerendered snapshot from committed fixtures. Netlify runs
+`pnpm generate`, serves `.output/public`, and calls no API at runtime.
+
+What works: every page in Thai, English and Chinese; navigation and language
+switching; search across the snapshot; RSS and sitemap files; the Studio tour;
+accessibility and performance checks. Form submissions show a demo confirmation
+and send nothing.
+
+What does not work: Studio login and editing, new form leads, live search
+indexing, and CMS previews.
+
+### Create the site
+
+1. Push the repository to GitHub.
+2. In Netlify, choose **Add new site → Import an existing project**.
+3. Set the **base directory** to `apps/website`. Netlify reads
+   `apps/website/netlify.toml`, which sets the build command, publish directory,
+   Node and pnpm versions, and security headers.
+4. Deploy. The default branch is `main`.
+
+The demo reads `apps/website/public/demo` and `apps/website/public/demo-media`.
+Both are committed, so the build is reproducible and takes about ten seconds.
+
+Optional environment variables:
+
+```dotenv
+NUXT_PUBLIC_SITE_URL=https://your-site.netlify.app
+NUXT_PUBLIC_SITE=meridian
+```
+
+When `NUXT_PUBLIC_SITE_URL` is omitted, the build uses Netlify's `URL` value.
+Set it explicitly after attaching a custom domain.
+
+### Deploy from the CLI
+
+```bash
+cd apps/website
+npx netlify-cli login
+npx netlify-cli init
+npx netlify-cli deploy --build --prod
+```
+
+### Refresh the snapshot
+
+The demo content does not change until the fixtures are regenerated. With the
+API running locally:
+
+```bash
+cd apps/website
+node scripts/snapshot-demo.mjs
+pnpm generate
+```
+
+The script writes the API responses, search index, media copies and PDFs under
+`public/`. Commit those files to publish the new snapshot.
+
+## 2. Full stack on a container host
+
+The API is PHP and cannot run on Netlify. Host it on a VPS, Fly.io, Render,
+Railway, or any container platform with PostgreSQL, Redis, object storage and
+Meilisearch.
+
+```
+www.example.com        Netlify or nginx   Nuxt site
+studio.example.com     Netlify or nginx   Vue Studio
+api.example.com        Docker             nginx, PHP-FPM, queue, scheduler
+                                          PostgreSQL, Redis, Meilisearch, MinIO
+```
+
+Use subdomains of the same registrable domain. Studio uses Sanctum cookies, and
+browsers block cross-site cookies in many configurations.
 
 ### Environment
 
@@ -80,9 +140,9 @@ MAIL_FROM_NAME="Meridian"
 MAIL_SCHEME=tls
 ```
 
-`TRUSTED_PROXIES=*` is only safe when nginx is behind a private load balancer or
-reverse proxy and the API port is not publicly reachable. Otherwise list the
-proxy addresses.
+`TRUSTED_PROXIES=*` is safe only when nginx sits behind a private load balancer
+or reverse proxy and the API port is not public. Otherwise list the proxy
+addresses.
 
 ### Run
 
@@ -93,161 +153,87 @@ cp .env.example .env
 APP_URL=https://api.example.com ./infrastructure/prod-up.sh
 ```
 
-The script starts only the API-side services. If you prefer explicit Compose
-commands:
+The script starts PostgreSQL, Redis, Meilisearch, MinIO, the API, the queue, the
+scheduler and nginx. It runs migrations and rebuilds the search index. The
+website and Studio are not started because Netlify or a separate proxy hosts
+them.
+
+The production override sets `APP_ENV=production`, `APP_DEBUG=false`,
+`SEED_DEMO=false`, enables config and view caching, stops publishing MinIO
+ports, and restarts services.
+
+To run the front ends in containers instead, add them explicitly:
 
 ```bash
-docker compose -f infrastructure/compose.yaml -f infrastructure/compose.prod.yaml \
-  up -d --build postgres redis meilisearch minio api queue scheduler nginx
-```
-
-The production override:
-
-- sets `APP_ENV=production`, `APP_DEBUG=false`, `SEED_DEMO=false`;
-- stops publishing MinIO ports;
-- enables config and view caching;
-- restarts API, queue, scheduler and nginx.
-
-The base file also defines `website` and `studio` for local review. Do not add
-them to a production `up`; Netlify hosts those.
-
-Run a one-off migration before switching traffic:
-
-```bash
-docker compose -f infrastructure/compose.yaml \
-  -f infrastructure/compose.prod.yaml exec api php artisan migrate --force
-```
-
-Seed only if you intend to run the demonstration content:
-
-```bash
-docker compose ... exec api php artisan db:seed --force
-docker compose ... exec api php artisan search:index
+APP_URL=https://api.example.com docker compose \
+  -f infrastructure/compose.yaml \
+  -f infrastructure/compose.prod.yaml \
+  up -d website studio
 ```
 
 ### TLS
 
-Terminate TLS in front of nginx (Caddy, Traefik, an ALB, or a host reverse proxy).
-Forward `X-Forwarded-Proto` and `X-Forwarded-For`; nginx already passes the scheme
-to PHP. Do not expose MinIO or PostgreSQL ports.
+Terminate TLS in front of nginx with Caddy, Traefik, an ALB, or a host reverse
+proxy. Forward `X-Forwarded-Proto` and `X-Forwarded-For`. Do not expose MinIO,
+PostgreSQL, or Redis ports.
 
 ### Media
 
 Two supported paths:
 
-1. **nginx `/storage`** with `FILESYSTEM_DISK=public` and
+1. nginx `/storage` with `FILESYSTEM_DISK=public` and
    `MEDIA_URL=https://api.example.com/storage`.
-2. **S3-compatible bucket** (MinIO or a cloud provider) with a public read policy
-   or CDN, and `MEDIA_URL` pointing at the CDN.
+2. An S3-compatible bucket with a public read policy or CDN, and `MEDIA_URL`
+   pointing at the CDN.
 
-Keep uploads under `MEDIA_MAX_SIZE` and preserve the existing MIME allow-list.
+Keep uploads under `MEDIA_MAX_SIZE` and preserve the MIME allow-list.
 
-## 3. Website on Netlify
+### Studio cookies
 
-Create one Netlify site from this repository:
-
-| Setting | Value |
-| --- | --- |
-| Base directory | `apps/website` |
-| Build command | `pnpm build` |
-| Publish directory | `dist` |
-| Functions directory | `.netlify/functions-internal` |
-
-`apps/website/netlify.toml` already defines these values, sets
-`NITRO_PRESET=netlify`, routes unknown paths to the Nuxt function, and adds
-security and cache headers.
-
-Set these environment variables in Netlify (Site configuration → Environment
-variables):
-
-```dotenv
-NUXT_PUBLIC_API_BASE=https://api.example.com/api/v1
-NUXT_API_INTERNAL_BASE=https://api.example.com/api/v1
-NUXT_PUBLIC_SITE=meridian
-NUXT_PUBLIC_SITE_URL=https://www.example.com
-NUXT_PUBLIC_STUDIO_URL=https://studio.example.com
-NUXT_PUBLIC_DEMO_MODE=true
-NITRO_PRESET=netlify
-NODE_VERSION=22
-```
-
-`NUXT_API_INTERNAL_BASE` must be public because Netlify Functions cannot reach a
-private Docker network. It is used for SSR, sitemaps, RSS and document proxies.
-
-Add `https://www.example.com` to `CORS_ALLOWED_ORIGINS` on the API. Deploy:
-
-```bash
-cd apps/website
-npx netlify-cli login
-npx netlify-cli init
-npx netlify-cli deploy --build --prod
-```
-
-Netlify preview deployments have unique hostnames. Add each preview origin to
-`CORS_ALLOWED_ORIGINS` if you need previews to submit forms or search.
-
-## 4. Studio on Netlify
-
-Create a second Netlify site:
-
-| Setting | Value |
-| --- | --- |
-| Base directory | `apps/studio` |
-| Build command | `pnpm build` |
-| Publish directory | `dist` |
-
-`apps/studio/netlify.toml` adds the SPA fallback and security headers. Set:
-
-```dotenv
-VITE_API_BASE=https://api.example.com/api/v1
-NODE_VERSION=22
-```
-
-`VITE_API_BASE` is compiled at build time, so changing it requires a redeploy.
-
-For Sanctum cookies:
+For Sanctum cookie auth:
 
 - API `SESSION_DOMAIN=.example.com`
 - API `SANCTUM_STATEFUL_DOMAINS=www.example.com,studio.example.com`
 - API `SESSION_SECURE_COOKIE=true`
-- API `CORS_ALLOWED_ORIGINS` includes `https://studio.example.com`
+- API `CORS_ALLOWED_ORIGINS` includes the Studio origin
+- Studio and API live under the same registrable domain
 
 Using the default `*.netlify.app` host for Studio with an API on another domain
-will usually break cookie auth in modern browsers. Use custom domains.
+will usually break cookie auth. Use custom domains.
 
-## 5. DNS
+## 3. DNS
 
 | Type | Name | Value |
 | --- | --- | --- |
-| CNAME | `www` | Netlify site hostname |
-| CNAME | `studio` | Netlify Studio site hostname |
+| CNAME | `www` | Netlify site or nginx host |
+| CNAME | `studio` | Netlify site or nginx host |
 | A / CNAME | `api` | Container host or load balancer |
 | CNAME | `cdn` | Optional media CDN |
 
-Enable Netlify managed HTTPS for both front ends. Issue a certificate for the API
-host at the proxy.
+Enable managed HTTPS for Netlify sites and issue a certificate for the API host
+at the proxy.
 
-## 6. Go-live checklist
+## 4. Go-live checklist
 
 ### API
 
 - [ ] `APP_ENV=production`, `APP_DEBUG=false`, unique `APP_KEY`.
 - [ ] HTTPS only; `SESSION_SECURE_COOKIE=true`; HSTS at the edge.
 - [ ] `CORS_ALLOWED_ORIGINS` and `SANCTUM_STATEFUL_DOMAINS` contain only real hosts.
-- [ ] Demo users removed or passwords rotated; `DEMO_MODE=false` if not a demo.
-- [ ] `php artisan config:cache route:cache view:cache` run in the image.
+- [ ] Demo users removed or passwords rotated; `DEMO_MODE=false`.
+- [ ] `php artisan config:cache` and `view:cache` run in the container.
 - [ ] Queue worker and scheduler running; failed jobs visible.
-- [ ] `search:index` run; query response reports `engine: meilisearch`.
-- [ ] `/api/v1/health` monitored; `/storage` or CDN serves an image.
+- [ ] `search:index` run; a query reports `engine: meilisearch`.
+- [ ] `/api/v1/health` monitored; media serves through `/storage` or the CDN.
 - [ ] Backups scheduled and one restore drill completed.
 
 ### Website
 
-- [ ] Netlify build succeeds from `apps/website`.
-- [ ] All three locales render with correct canonical and hreflang.
+- [ ] Build succeeds from `apps/website`.
+- [ ] Three locales render with correct canonical and hreflang.
 - [ ] Search, contact form and job application reach the API.
 - [ ] Sitemap and RSS return 200.
-- [ ] Security headers present; `_nuxt` assets cached immutably.
+- [ ] Security headers present; hashed assets cached.
 - [ ] Accessibility and performance checks pass on the deployed URL.
 
 ### Studio
@@ -257,10 +243,9 @@ host at the proxy.
 - [ ] Media upload reaches the configured bucket.
 - [ ] Site switching is limited to assigned sites.
 
-## 7. Deploy and rollback
+## 5. Deploy and rollback
 
-Netlify builds on every push to `main` once the site is linked. The API deploy
-sequence is:
+For the static demo, Netlify builds every push to `main`. For the API:
 
 1. Build and push an image tagged with the commit SHA.
 2. Run migrations as a one-shot job.
@@ -272,34 +257,36 @@ Keep the previous image tag. Migrations must be backwards compatible for one
 release. Do not roll back destructive migrations automatically; restore from a
 backup or write a forward fix.
 
-## 8. Backups
+## 6. Backups
 
 Use `infrastructure/backup.sh` for a Compose-hosted database and media, then copy
 the archives off-host and encrypt them. For managed services, enable automated
-backups and PITR. See [RUNBOOK.md](RUNBOOK.md) for the restore drill.
+backups and point-in-time recovery. See [RUNBOOK.md](RUNBOOK.md) for the restore
+drill.
 
-## 9. Scaling
+## 7. Scaling
 
 - API containers are stateless apart from PostgreSQL, Redis and S3; scale behind
   a load balancer.
 - Scale queue workers independently. Use Redis or SQS, never `sync`.
 - Image variant generation is the heaviest request path; move it to the queue if
   uploads grow.
-- Netlify Functions scale with traffic. Keep SSR API calls fast; Netlify has a
-  request timeout.
 - Meilisearch scales vertically first; use a managed search service for large
   corpora.
+- A static Netlify demo scales without application servers.
 
-## 10. CI
+## 8. CI
 
 `.github/workflows/ci.yml` runs PHP tests and Pint, Composer audit, website and
-Studio typechecks and builds, a Netlify-preset build with output assertions, and
-the Playwright suite including accessibility and performance checks.
+Studio typechecks and builds, a static demo build with output checks, a
+production Compose validation, and the Playwright suite including accessibility
+and performance checks.
 
-## 11. Known constraints
+## 9. Constraints
 
-- Netlify cannot run Laravel, PostgreSQL, Redis, Meilisearch or MinIO.
-- Netlify Function cold starts add latency to the first SSR request after idle.
+- The static demo is a snapshot. Content changes require a new snapshot commit.
+- Demo forms do not persist data.
+- Netlify cannot run Laravel, PostgreSQL, Redis, Meilisearch, or MinIO.
 - No external error tracking is configured; add a Sentry DSN or equivalent.
 - No WAF or bot protection is included beyond framework rate limits.
 - The API does not ship a CSP because the front end uses inline JSON-LD and

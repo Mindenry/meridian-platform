@@ -4,6 +4,7 @@ import type { ContactDetails, NavItem, SiteBootstrap } from '~/types'
 const props = defineProps<{ bootstrap: SiteBootstrap | null }>()
 const { localeCode, localePath } = useLocale()
 const { openPreferences } = useConsent()
+const config = useRuntimeConfig()
 const route = useRoute()
 
 const contact = computed<ContactDetails | null>(() => props.bootstrap?.settings?.['contact.details'] ?? null)
@@ -25,6 +26,12 @@ const labels = computed(() => ({
   credits: localeCode.value === 'th' ? 'เครดิตรูปภาพ' : localeCode.value === 'zh-CN' ? '图片来源' : 'Image credits',
   accessibility: localeCode.value === 'th' ? 'การเข้าถึง' : localeCode.value === 'zh-CN' ? '无障碍声明' : 'Accessibility',
   cookies: localeCode.value === 'th' ? 'การตั้งค่าคุกกี้' : localeCode.value === 'zh-CN' ? 'Cookie 设置' : 'Cookie settings',
+  demoNote: localeCode.value === 'th'
+    ? 'เดโมแบบ static: เนื้อหาเป็นชุดข้อมูลตัวอย่าง และการส่งฟอร์มจะไม่ถูกส่งจริง'
+    : localeCode.value === 'zh-CN'
+      ? '静态演示：内容为快照，表单提交不会发送真实数据。'
+      : 'Static demo: content is a snapshot and form submissions are simulated.',
+  studioTour: localeCode.value === 'th' ? 'ทัวร์ Studio' : localeCode.value === 'zh-CN' ? 'Studio 导览' : 'Studio tour',
   backToTop: localeCode.value === 'th' ? 'กลับด้านบน' : localeCode.value === 'zh-CN' ? '返回顶部' : 'Back to top',
   notice: localeCode.value === 'th'
     ? 'เมอริเดียน อินดัสเทรียล กรุ๊ป เป็นแบรนด์สมมติสำหรับการสาธิตพอร์ตโฟลิโอ ตัวเลข ผลลัพธ์ และข้อมูลองค์กรทั้งหมดเป็นข้อมูลประกอบการสาธิต'
@@ -76,6 +83,7 @@ function scrollTop() {
         <div>
           <p class="footer-heading">{{ labels.company }}</p>
           <NuxtLink v-for="item in menu('footer-company')" :key="item.url" :to="item.url" class="footer-link">{{ item.label }}</NuxtLink>
+          <NuxtLink :to="localePath('studio')" class="footer-link">{{ labels.studioTour }}</NuxtLink>
         </div>
         <div>
           <p class="footer-heading">{{ labels.capabilities }}</p>
@@ -92,7 +100,10 @@ function scrollTop() {
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-notice">{{ labels.notice }}</p>
+        <div>
+          <p class="footer-notice">{{ labels.notice }}</p>
+          <p v-if="config.public.demoStatic" class="footer-demo mono">{{ labels.demoNote }}</p>
+        </div>
         <div class="footer-bottom__actions">
           <LocaleSwitcher />
           <span class="mono">© {{ new Date().getFullYear() }} MERIDIAN</span>
@@ -212,9 +223,17 @@ function scrollTop() {
 
 .footer-notice {
   max-width: 68ch;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.55;
   color: rgba(241, 237, 228, 0.7);
+}
+
+.footer-demo {
+  margin-top: 0.45rem;
+  color: rgba(241, 237, 228, 0.7);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .footer-bottom__actions {

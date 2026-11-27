@@ -83,13 +83,9 @@ async function submit() {
   body.append('resume', resume.value)
 
   try {
-    const response = await $fetch<{ message: string; reference: string }>(
-      `${useRuntimeConfig().public.apiBase}/public/jobs/${encodeURIComponent(slug.value)}/applications`,
-      {
-        method: 'POST',
-        body,
-        headers: { Accept: 'application/json', 'X-Site': useRuntimeConfig().public.site },
-      },
+    const response = await api.post<{ message: string; reference: string }>(
+      `/public/jobs/${encodeURIComponent(slug.value)}/applications`,
+      body,
     )
     success.value = response.message
     reference.value = response.reference
@@ -242,7 +238,10 @@ const sectionLabels = computed(() => ({
               <input id="job-website" v-model="form.website" type="text" tabindex="-1" autocomplete="off">
             </div>
 
-            <ButtonLink :label="sending ? copy.submitting : copy.submitApplication" to="#" icon @click.prevent="submit" />
+            <button type="submit" class="btn" :disabled="sending">
+              <span>{{ sending ? copy.submitting : copy.submitApplication }}</span>
+              <AppIcon name="arrow-up-right" :size="14" class="btn-icon" />
+            </button>
             <p v-if="errors._form" class="form-error form-error--global" role="alert">{{ errors._form }}</p>
           </form>
         </div>

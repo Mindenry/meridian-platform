@@ -435,6 +435,18 @@ html[lang="th"] :is(
   transform: translateY(0);
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  --btn-bg: var(--ink);
+  --btn-border: var(--ink);
+  --btn-fg: var(--ivory);
+  transform: none;
+}
+
 .btn .btn-icon {
   transition: transform 200ms var(--ease);
 }

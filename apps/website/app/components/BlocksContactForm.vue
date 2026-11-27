@@ -206,7 +206,10 @@ function reset() {
             </div>
 
             <div class="form-actions">
-              <ButtonLink :label="sending ? labels.sending : labels.submit" to="#" icon @click.prevent="submit" />
+              <button type="submit" class="btn" :disabled="sending">
+                <span>{{ sending ? labels.sending : labels.submit }}</span>
+                <AppIcon name="arrow-up-right" :size="14" class="btn-icon" />
+              </button>
               <p class="form-privacy">
                 {{ localeCode === 'th' ? 'ข้อมูลของคุณถูกใช้เพื่อตอบข้อสอบถามเท่านั้น' : localeCode === 'zh-CN' ? '您的信息仅用于回复本次咨询。' : 'Your details are used only to respond to this enquiry.' }}
               </p>

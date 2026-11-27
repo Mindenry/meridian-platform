@@ -383,3 +383,31 @@ multi-site claims hard to verify.
 **Consequences.** Consent is auditable, feeds are real, and multi-site isolation
 is demonstrable end to end. Content editors can still change page copy in the
 CMS; the statement and feed are code-owned.
+
+---
+
+## ADR-024 — Static demo mode for a backend-free portfolio
+
+**Context.** A reviewer should be able to open one URL and understand the project
+without a hosted Laravel API, PostgreSQL, Redis, Meilisearch, or MinIO. The full
+stack stays useful for demonstrating the CMS, but it is too much infrastructure
+for a portfolio link.
+
+**Decision.**
+
+- Add `NUXT_PUBLIC_DEMO_STATIC`. It switches `useApi` to a fixture adapter and
+  makes analytics a no-op.
+- `scripts/snapshot-demo.mjs` captures the public API responses, a search index,
+  seed media, and PDFs into committed files under `public/demo`.
+- Prerender every route with `nuxt generate`. Search filters the snapshot
+  client-side; forms return a demo confirmation; RSS and sitemaps are generated
+  from fixtures.
+- Add a Studio tour at `/:locale/studio` with real CMS screenshots so the
+  editorial product is visible without a mock admin API.
+- Make the Netlify config use the static build. The full-stack path stays in
+  `docs/DEPLOYMENT.md`.
+
+**Consequences.** The demo deploys as static files and costs almost nothing. It
+does not accept real leads, edit content, or show live Studio screens. Refreshing
+the demo requires running the snapshot script and committing the result. CI
+builds the static output and checks the routes, fixtures, sitemap, and RSS.

@@ -133,7 +133,7 @@ certification, financial result, or partnership is claimed.
 | Docker images | `docker compose ... build` | API, nginx, website, Studio built |
 | Full Compose stack | `docker compose ... up -d --build` | PostgreSQL, Redis, Meilisearch, MinIO, API, queue, scheduler, nginx, website, Studio all up |
 | Compose E2E | `E2E_DOCKER=1 npx playwright test` | 41 passed against the containerised stack |
-| Netlify build | `NITRO_PRESET=netlify pnpm --filter @meridian/website build` | `dist/` plus `.netlify/functions-internal/server` generated; handler renders `/en` with HTTP 200 |
+| Static demo | `NUXT_PUBLIC_DEMO_STATIC=true pnpm --filter @meridian/website generate` | 162 routes plus fixtures, media, sitemap and RSS with no API |
 | Production Compose | `APP_URL=https://api.example.com docker compose -f infrastructure/compose.yaml -f infrastructure/compose.prod.yaml config` | Valid; MinIO ports closed and front ends excluded |
 | Meilisearch | public search request | `engine: meilisearch`, 100 documents for Meridian and 3 for the second site |
 | Object storage | write/read through the `s3` disk | Pass (MinIO) |
