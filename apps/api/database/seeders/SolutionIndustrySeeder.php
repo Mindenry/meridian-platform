@@ -802,7 +802,7 @@ class SolutionIndustrySeeder extends Seeder
                 'en' => [
                     'title' => 'Infrastructure',
                     'slug' => 'infrastructure',
-                    'tagline' => 'Critical assets designed for the handover, not only the opening.',
+                    'tagline' => 'Critical assets designed for the people who will run them.',
                     'overview' => 'Infrastructure projects are judged decades after commissioning. We focus on interface management, commissioning evidence, and the operating model that keeps an asset useful long after the project team has left.',
                     'challenges' => [
                         ['title' => 'Interface complexity', 'description' => 'Many packages, one operating outcome, and unclear accountability at the seams.'],
@@ -819,7 +819,7 @@ class SolutionIndustrySeeder extends Seeder
                 'th' => [
                     'title' => 'โครงสร้างพื้นฐาน',
                     'slug' => 'โครงสร้างพื้นฐาน',
-                    'tagline' => 'สินทรัพย์สำคัญที่ออกแบบเพื่อการส่งมอบ ไม่ใช่แค่พิธีเปิด',
+                    'tagline' => 'สินทรัพย์สำคัญที่ออกแบบเพื่อคนที่ต้องดูแลมันจริง ๆ',
                     'overview' => 'โครงการโครงสร้างพื้นฐานถูกตัดสินหลายทศวรรษหลังการทดสอบระบบ เราจึงให้ความสำคัญกับการจัดการอินเทอร์เฟซ หลักฐานการทดสอบ และโมเดลการดำเนินงานที่ทำให้สินทรัพย์ยังมีประโยชน์หลังทีมโครงการจากไป',
                     'challenges' => [
                         ['title' => 'อินเทอร์เฟซซับซ้อน', 'description' => 'หลายแพ็กเกจ แต่ผลลัพธ์การดำเนินงานเดียว และความรับผิดชอบที่รอยต่อไม่ชัด'],
@@ -836,7 +836,7 @@ class SolutionIndustrySeeder extends Seeder
                 'zh-CN' => [
                     'title' => '基础设施',
                     'slug' => 'infrastructure',
-                    'tagline' => '为移交而非仅剪彩设计的关键资产。',
+                    'tagline' => '为真正运营它的人设计的关键资产。',
                     'overview' => '基础设施在调试数十年后才被真正评判。我们聚焦接口管理、调试证据，以及项目团队离开后仍让资产有用的运营模型。',
                     'challenges' => [
                         ['title' => '接口复杂', 'description' => '多个合同包、一个运营结果，接缝处责任不清。'],

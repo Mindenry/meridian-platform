@@ -54,7 +54,7 @@ class InsightSeeder extends Seeder
                         ['p', 'The useful question is not "what data do we have?" It is "what decision changes if this number moves?" A stop-reason distribution that changes the supervisor\'s next action is valuable. A monthly utilisation chart that confirms what everyone already knows is expensive theatre.'],
                         ['ul', ['Name the owner of each metric and the action it triggers.', 'Record the source signal, sample rate, and transformation.', 'Show data freshness and known gaps on the screen.', 'Retire metrics nobody has acted on for two quarters.']],
                         ['h2', 'Trust is an engineering property'],
-                        ['p', 'Traceability is not a reporting feature; it is a data architecture decision. Once definitions, lineage, and freshness are treated as part of the product, the dashboard stops being a claim and starts being evidence.'],
+                        ['p', 'Traceability belongs in the data architecture. Once definitions, lineage, and freshness are treated as part of the product, the dashboard stops being a claim and starts being evidence.'],
                     ]),
                 ],
                 'th' => [
@@ -67,7 +67,7 @@ class InsightSeeder extends Seeder
                         ['p', 'คำถามที่มีประโยชน์ไม่ใช่ "เรามีข้อมูลอะไร" แต่คือ "การตัดสินใจใดจะเปลี่ยนถ้าตัวเลขนี้ขยับ" การกระจายสาเหตุการหยุดที่เปลี่ยนการกระทำถัดไปของหัวหน้างานมีคุณค่า ส่วนกราฟการใช้กำลังการผลิตรายเดือนที่ยืนยันสิ่งที่ทุกคนรู้อยู่แล้วคือโรงละครราคาแพง'],
                         ['ul', ['ระบุเจ้าภาพของแต่ละตัวชี้วัดและการกระทำที่มันกระตุ้น', 'บันทึกสัญญาณต้นทาง อัตราการสุ่ม และการแปลงข้อมูล', 'แสดงความสดของข้อมูลและช่องว่างที่รู้อยู่บนหน้าจอ', 'เลิกใช้ตัวชี้วัดที่ไม่มีใครลงมือทำสองไตรมาสติด']],
                         ['h2', 'ความเชื่อถือคือคุณสมบัติทางวิศวกรรม'],
-                        ['p', 'การตรวจสอบย้อนกลับไม่ใช่ฟีเจอร์รายงาน แต่เป็นการตัดสินใจเชิงสถาปัตยกรรมข้อมูล เมื่อนิยาม สายข้อมูล และความสดถูกมองเป็นส่วนหนึ่งของผลิตภัณฑ์ แดชบอร์ดจะเลิกเป็นคำกล่าวอ้างและเริ่มเป็นหลักฐาน'],
+                        ['p', 'การตรวจสอบย้อนกลับเป็นเรื่องของสถาปัตยกรรมข้อมูล เมื่อนิยาม สายข้อมูล และความสดถูกมองเป็นส่วนหนึ่งของผลิตภัณฑ์ แดชบอร์ดจะเลิกเป็นคำกล่าวอ้างและเริ่มเป็นหลักฐาน'],
                     ]),
                 ],
             ],
@@ -75,8 +75,8 @@ class InsightSeeder extends Seeder
                 'slug' => 'designing-for-changeover', 'type' => 'insight', 'category' => 'operations', 'author' => 'editor@meridian.example',
                 'image' => 'manufacturing', 'featured' => false, 'days' => 20,
                 'en' => [
-                    'title' => 'Designing for changeover, not just throughput',
-                    'excerpt' => 'A line optimised for one product is a line that punishes every product after it. Changeover is a design constraint, not an operator problem.',
+                    'title' => 'Design the line around changeover',
+                    'excerpt' => 'A line optimised for one product punishes every product after it. Changeover belongs in the line design, where tooling, recipes, and quality gates are decided.',
                     'body' => $this->doc([
                         ['p', 'Throughput is easy to sell. A single number, measured on a good day, with a stable product and a settled crew. Real plants rarely operate under those conditions for long.'],
                         ['p', 'Changeover exposes the quality of the whole system: tooling design, recipe management, quality gates, material staging, and the operator\'s mental model. When those are treated as separate projects, every product change becomes an escalation.'],
@@ -88,8 +88,8 @@ class InsightSeeder extends Seeder
                     ]),
                 ],
                 'th' => [
-                    'title' => 'ออกแบบเพื่อการเปลี่ยนรุ่น ไม่ใช่แค่กำลังผลิต',
-                    'excerpt' => 'สายการผลิตที่ปรับเหมาะกับสินค้าเดียว sẽลงโทษสินค้าทุกตัวถัดไป การเปลี่ยนรุ่นเป็นข้อจำกัดการออกแบบ ไม่ใช่ปัญหาของผู้ปฏิบัติงาน',
+                    'title' => 'ออกแบบไลน์โดยให้ changeover เป็นโจทย์ตั้งต้น',
+                    'excerpt' => 'ไลน์ที่ปรับเหมาะกับสินค้าตัวเดียวจะลงโทษสินค้าทุกตัวที่ตามมา changeover จึงต้องอยู่ในขั้นออกแบบไลน์ ที่ซึ่ง tooling, recipe และ quality gate ถูกกำหนด',
                     'body' => $this->doc([
                         ['p', 'กำลังผลิตขายง่าย ตัวเลขเดียว วัดในวันที่ดี ผลิตภัณฑ์คงที่ และทีมคุ้นเคย แต่โรงงานจริงไม่ได้อยู่ในสภาพนั้นนาน'],
                         ['p', 'การเปลี่ยนรุ่นเผยคุณภาพของทั้งระบบ ทั้งการออกแบบเครื่องมือ การจัดการสูตร การตรวจคุณภาพ การเตรียมวัตถุดิบ และโมเดลในหัวของผู้ปฏิบัติงาน เมื่อสิ่งเหล่านี้ถูกมองเป็นโครงการแยกกัน ทุกการเปลี่ยนผลิตภัณฑ์จึงกลายเป็นการยกระดับปัญหา'],
@@ -203,7 +203,7 @@ class InsightSeeder extends Seeder
                     'excerpt' => 'The control network is no longer isolated, and the maintenance laptop is part of the attack surface. Security has to be designed with operations, not handed to IT afterwards.',
                     'body' => $this->doc([
                         ['p', 'Industrial security used to be a perimeter conversation: keep the plant network separate and assume the rest. Remote support, vendor access, and data projects have dissolved that assumption.'],
-                        ['p', 'The practical risk is not only a malicious actor. It is a compromised engineering laptop, an unpatched historian, or a shared password that turns a routine maintenance task into an outage.'],
+                        ['p', 'The practical risk is usually mundane: a compromised engineering laptop, an unpatched historian, or a shared password that turns a routine maintenance task into an outage.'],
                         ['h2', 'Design for the maintenance reality'],
                         ['ul', ['Inventory every remote access path, including vendor tools.', 'Separate engineering, operations, and enterprise zones with documented rules.', 'Use unique credentials and hardware-backed authentication for engineers.', 'Test restore procedures for historians and configuration backups.']],
                         ['h2', 'Make security an operating routine'],
@@ -215,7 +215,7 @@ class InsightSeeder extends Seeder
                     'excerpt' => 'เครือข่ายควบคุมไม่ได้แยกเดี่ยวอีกต่อไป และแล็ปท็อปของทีมซ่อมบำรุงคือส่วนหนึ่งของพื้นผิวการโจมตี ความปลอดภัยต้องออกแบบร่วมกับปฏิบัติการ ไม่ใช่ส่งให้ไอทีทีหลัง',
                     'body' => $this->doc([
                         ['p', 'ความปลอดภัยอุตสาหกรรมเคยเป็นเรื่องของขอบเขตเครือข่าย แยกเครือข่ายโรงงานและถือว่าที่เหลือปลอดภัย การสนับสนุนระยะไกล การเข้าถึงของผู้ขาย และโครงการข้อมูลได้ละลายสมมติฐานนั้น'],
-                        ['p', 'ความเสี่ยงจริงไม่ใช่เพียงผู้ไม่หวังดี แต่คือแล็ปท็อปวิศวกรรมที่ถูกบุกรุก ฮิสทอเรียนที่ไม่ได้แพตช์ หรือรหัสผ่านร่วมที่ทำให้งานซ่อมประจำกลายเป็นเหตุหยุด'],
+                        ['p', 'ความเสี่ยงจริงมักเป็นเรื่องธรรมดา: แล็ปท็อปวิศวกรรมที่ถูกบุกรุก ฮิสทอเรียนที่ไม่ได้แพตช์ หรือรหัสผ่านร่วมที่ทำให้งานซ่อมประจำกลายเป็นเหตุหยุด'],
                         ['h2', 'ออกแบบตามความเป็นจริงของงานซ่อม'],
                         ['ul', ['ทำบัญชีทุกเส้นทางเข้าถึงระยะไกล รวมถึงเครื่องมือผู้ขาย', 'แยกโซนวิศวกรรม ปฏิบัติการ และองค์กรด้วยกฎที่จัดทำเอกสาร', 'ใช้ข้อมูลรับรองเฉพาะและ authentication ที่มีฮาร์ดแวร์รองรับสำหรับวิศวกร', 'ทดสอบขั้นตอนกู้คืนฮิสทอเรียนและสำรองการตั้งค่า']],
                         ['h2', 'ทำให้ความปลอดภัยเป็น routine'],
@@ -228,7 +228,7 @@ class InsightSeeder extends Seeder
                 'image' => 'automation', 'featured' => false, 'days' => 61,
                 'en' => [
                     'title' => 'Five questions before your first robot cell',
-                    'excerpt' => 'A robot is rarely the hard part. The hard part is the material, the fixture, the exception, and the person who has to recover the cell at 2 a.m.',
+                    'excerpt' => 'Material feed, fixturing, exceptions, and the person who recovers the cell at 2 a.m. decide whether a robot cell works.',
                     'body' => $this->doc([
                         ['p', 'Robot cells fail for human reasons more often than mechanical ones. Before comparing payloads and reach, answer five questions about the work around the robot.'],
                         ['h2', 'The five questions'],
@@ -240,7 +240,7 @@ class InsightSeeder extends Seeder
                 ],
                 'th' => [
                     'title' => 'ห้าคำถามก่อนสร้างเซลล์หุ่นยนต์แรก',
-                    'excerpt' => 'หุ่นยนต์ไม่ใช่ส่วนที่ยากที่สุด ส่วนที่ยากคือวัตถุดิบ จิ๊ก ข้อยกเว้น และคนที่ต้องกู้เซลล์ตอนตีสอง',
+                    'excerpt' => 'ระบบป้อนวัสดุ จิ๊ก ข้อยกเว้น และคนที่ต้องกู้เซลล์ตอนตีสอง คือสิ่งที่ตัดสินว่าเซลล์หุ่นยนต์จะใช้งานได้จริงหรือไม่',
                     'body' => $this->doc([
                         ['p', 'เซลล์หุ่นยนต์ล้มเหลวด้วยเหตุผลของคนบ่อยกว่าเหตุผลเชิงกล ก่อนเปรียบเทียบน้ำหนักบรรทุกและระยะเอื้อม ให้ตอบห้าคำถามเกี่ยวกับงานรอบหุ่นยนต์'],
                         ['h2', 'ห้าคำถาม'],
@@ -256,26 +256,26 @@ class InsightSeeder extends Seeder
                 'image' => 'infrastructure', 'featured' => false, 'days' => 72,
                 'en' => [
                     'title' => 'Why infrastructure projects fail at the handover',
-                    'excerpt' => 'The asset is built, the ribbon is cut, and the operating team inherits a system nobody designed for them. Handover is a design phase, not a final meeting.',
+                    'excerpt' => 'The asset is built, the ribbon is cut, and the operating team inherits a system nobody designed for them. Handover has to be designed alongside the system.',
                     'body' => $this->doc([
                         ['p', 'Infrastructure projects are usually judged at completion. In practice, most of their value or cost is determined after the project team leaves, when the operating team starts making decisions with whatever evidence it inherited.'],
                         ['p', 'Handover failures are rarely dramatic. They look like a missing as-built drawing, a spare part with a six-month lead time, or a control sequence nobody can explain.'],
                         ['h2', 'Design the operating model early'],
                         ['ul', ['Name the future owner before detailed design.', 'Make the as-built requirement part of every package, not a final deliverable.', 'Test the maintenance routine during commissioning, not after.', 'Define the evidence required to accept each system.']],
                         ['h2', 'Count the cost of ambiguity'],
-                        ['p', 'A project that saves a month by deferring documentation can cost years of slower maintenance and unsafe improvisation. The handover is not administration. It is the moment the asset becomes useful.'],
+                        ['p', 'A project that saves a month by deferring documentation can cost years of slower maintenance and unsafe improvisation. Handover is when the asset becomes useful, so the paperwork and the training belong to the build.'],
                     ]),
                 ],
                 'th' => [
                     'title' => 'ทำไมโครงการโครงสร้างพื้นฐานล้มเหลวตอนส่งมอบ',
-                    'excerpt' => 'สินทรัพย์สร้างเสร็จ ตัดริบบิ้น และทีมปฏิบัติการได้รับระบบที่ไม่มีใครออกแบบมาเพื่อ mereka การส่งมอบคือระยะออกแบบ ไม่ใช่การประชุมครั้งสุดท้าย',
+                    'excerpt' => 'สินทรัพย์สร้างเสร็จ ตัดริบบิ้น แล้วทีมปฏิบัติการต้องรับระบบที่ไม่มีใครออกแบบมาเพื่อพวกเขา การส่งมอบจึงต้องถูกออกแบบตั้งแต่ต้นพร้อมกับระบบ',
                     'body' => $this->doc([
                         ['p', 'โครงการโครงสร้างพื้นฐานมักถูกตัดสินตอนเสร็จ แต่ในทางปฏิบัติ คุณค่าหรือต้นทุนส่วนใหญ่ถูกกำหนดหลังทีมโครงการจากไป เมื่อทีมปฏิบัติการเริ่มตัดสินใจด้วยหลักฐานที่ได้รับมา'],
                         ['p', 'ความล้มเหลวในการส่งมอบ แทบไม่ดราม่า มันดูเหมือนแบบ as-built ที่หายไป อะไหล่ที่มี ระยะเวลาจัดหาหกเดือน หรือลำดับการควบคุมที่ไม่มีใครอธิบายได้'],
                         ['h2', 'ออกแบบโมเดลปฏิบัติการตั้งแต่เนิ่นๆ'],
                         ['ul', ['ระบุเจ้าของในอนาคตก่อนการออกแบบรายละเอียด', 'ทำให้ข้อกำหนด as-built เป็นส่วนหนึ่งของทุกแพ็กเกจ ไม่ใช่ของส่งมอบสุดท้าย', 'ทดสอบ routine บำรุงรักษาระหว่าง commissioning ไม่ใช่หลัง', 'นิยามหลักฐานที่ต้องใช้รับมอบแต่ละระบบ']],
                         ['h2', 'นับต้นทุนของความคลุมเครือ'],
-                        ['p', 'โครงการที่ประหยัดหนึ่งเดือนโดยเลื่อนเอกสารอาจต้องจ่ายหลายปีของงานซ่อมที่ช้าลงและการแก้ปัญหาเฉพาะหน้าที่ไม่ปลอดภัย การส่งมอบไม่ใช่ธุรการ แต่คือช่วงเวลาที่สินทรัพย์เริ่มมีประโยชน์'],
+                        ['p', 'โครงการที่ประหยัดหนึ่งเดือนโดยเลื่อนเอกสารอาจต้องจ่ายหลายปีของงานซ่อมที่ช้าลงและการแก้ปัญหาเฉพาะหน้าที่ไม่ปลอดภัย การส่งมอบคือช่วงที่สินทรัพย์เริ่มมีประโยชน์ เอกสารและการฝึกอบรมจึงเป็นส่วนหนึ่งของงานสร้าง'],
                     ]),
                 ],
             ],
