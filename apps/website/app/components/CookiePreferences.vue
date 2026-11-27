@@ -25,7 +25,7 @@ const labels = computed(() => ({
     : localeCode.value === 'zh-CN'
       ? '安全性、登录状态以及语言偏好。'
       : 'Security, sign-in state, and language preference.',
-  analytics: localeCode.value === 'th' ? 'การวัดผล' : localeCode.value === 'zh-CN' ? '分析' : 'Analytics',
+  analytics: localeCode.value === 'th' ? 'คุกกี้เพื่อการวิเคราะห์' : localeCode.value === 'zh-CN' ? '分析' : 'Analytics',
   analyticsNote: localeCode.value === 'th'
     ? 'สถิติการเข้าชมแบบไม่ระบุตัวตน เพื่อปรับปรุงเนื้อหา'
     : localeCode.value === 'zh-CN'

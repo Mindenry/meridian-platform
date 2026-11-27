@@ -118,7 +118,7 @@ export async function deletePage(request: APIRequestContext, id: number): Promis
 export async function dismissConsent(page: Page): Promise<void> {
   const banner = page.getByRole('complementary', { name: 'Analytics consent' })
   await expect(banner).toBeVisible({ timeout: 20_000 })
-  await banner.getByRole('button', { name: /not now|暂不|ไม่ตอนนี้/i }).click()
+  await banner.getByRole('button', { name: /decline|拒绝|ปฏิเสธ/i }).click()
   await expect(banner).toBeHidden({ timeout: 10_000 })
 }
 

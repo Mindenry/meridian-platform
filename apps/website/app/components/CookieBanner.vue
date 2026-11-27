@@ -19,15 +19,15 @@ onBeforeUnmount(() => {
 const visible = computed(() => hydrated.value && ready.value && consent.value === null)
 
 const labels = computed(() => ({
-  title: localeCode.value === 'th' ? 'การวัดผลบนเว็บไซต์' : localeCode.value === 'zh-CN' ? '网站分析' : 'Website analytics',
+  title: localeCode.value === 'th' ? 'คุกกี้และการวิเคราะห์' : localeCode.value === 'zh-CN' ? 'Cookie 与分析' : 'Cookies and analytics',
   body: localeCode.value === 'th'
-    ? 'เราเก็บสถิติการเข้าชมแบบไม่ระบุตัวตน คุณเลือกได้ว่าจะอนุญาตหรือไม่'
+    ? 'เว็บไซต์นี้ใช้คุกกี้เพื่อวัดผลการเข้าชมแบบไม่ระบุตัวตน คุณเลือกได้ว่าจะอนุญาตหรือไม่'
     : localeCode.value === 'zh-CN'
-      ? '我们收集匿名的第一方访问统计。您可以决定是否允许。'
-      : 'We collect anonymous, first-party analytics. You choose whether to allow it.',
-  accept: localeCode.value === 'th' ? 'อนุญาตการวัดผล' : localeCode.value === 'zh-CN' ? '允许分析' : 'Allow analytics',
-  deny: localeCode.value === 'th' ? 'ไม่ตอนนี้' : localeCode.value === 'zh-CN' ? '暂不' : 'Not now',
-  manage: localeCode.value === 'th' ? 'จัดการการตั้งค่า' : localeCode.value === 'zh-CN' ? '管理设置' : 'Manage preferences',
+      ? '本网站使用 Cookie 进行匿名访问统计，您可以选择是否允许。'
+      : 'This site uses cookies for anonymous traffic analytics. You choose whether to allow them.',
+  accept: localeCode.value === 'th' ? 'ยอมรับคุกกี้' : localeCode.value === 'zh-CN' ? '允许分析' : 'Allow analytics',
+  deny: localeCode.value === 'th' ? 'ปฏิเสธ' : localeCode.value === 'zh-CN' ? '拒绝' : 'Decline',
+  manage: localeCode.value === 'th' ? 'ตั้งค่าคุกกี้' : localeCode.value === 'zh-CN' ? 'Cookie 设置' : 'Manage preferences',
   policy: localeCode.value === 'th' ? 'นโยบายความเป็นส่วนตัว' : localeCode.value === 'zh-CN' ? '隐私政策' : 'Privacy policy',
 }))
 </script>
