@@ -17,7 +17,6 @@ const footerStatement = computed(() => {
 const menu = (key: string): NavItem[] => props.bootstrap?.navigation?.[key] ?? []
 
 const labels = computed(() => ({
-  contact: localeCode.value === 'th' ? 'ติดต่อ' : localeCode.value === 'zh-CN' ? '联系' : 'Contact',
   company: localeCode.value === 'th' ? 'บริษัท' : localeCode.value === 'zh-CN' ? '公司' : 'Company',
   capabilities: localeCode.value === 'th' ? 'ขีดความสามารถ' : localeCode.value === 'zh-CN' ? '能力' : 'Capabilities',
   legal: localeCode.value === 'th' ? 'กฎหมาย' : localeCode.value === 'zh-CN' ? '法律' : 'Legal',
@@ -33,7 +32,6 @@ const labels = computed(() => ({
       : 'Static demo: content is a snapshot and form submissions are simulated.',
   studioTour: localeCode.value === 'th' ? 'ทัวร์ Studio' : localeCode.value === 'zh-CN' ? 'Studio 导览' : 'Studio tour',
   backToTop: localeCode.value === 'th' ? 'กลับด้านบน' : localeCode.value === 'zh-CN' ? '返回顶部' : 'Back to top',
-  startProject: localeCode.value === 'th' ? 'เริ่มโครงการ' : localeCode.value === 'zh-CN' ? '开始项目' : 'Start a project',
   notice: localeCode.value === 'th'
     ? 'เมอริเดียน อินดัสเทรียล กรุ๊ป เป็นแบรนด์สมมติสำหรับการสาธิตพอร์ตโฟลิโอ ตัวเลข ผลลัพธ์ และข้อมูลองค์กรทั้งหมดเป็นข้อมูลประกอบการสาธิต'
     : localeCode.value === 'zh-CN'
@@ -52,20 +50,14 @@ function scrollTop() {
 <template>
   <footer class="site-footer">
     <div class="container footer-inner">
-      <div class="footer-main">
-        <div class="footer-contact">
-          <p class="eyebrow footer-label">{{ labels.contact }}</p>
-          <a :href="`mailto:${contact?.email || 'hello@meridian.example'}`" class="footer-email">
-            <span>{{ contact?.email || 'hello@meridian.example' }}</span>
-            <span class="footer-email__icon">
-              <AppIcon name="arrow-up-right" :size="20" />
-            </span>
-          </a>
+      <div class="footer-top">
+        <div class="footer-brand">
+          <SiteLogo variant="light" />
           <p class="footer-statement">{{ footerStatement }}</p>
-          <NuxtLink :to="localePath('contact')" class="footer-cta">
-            <span>{{ labels.startProject }}</span>
+          <a :href="`mailto:${contact?.email || 'hello@meridian.example'}`" class="footer-email">
+            {{ contact?.email || 'hello@meridian.example' }}
             <AppIcon name="arrow-up-right" :size="14" />
-          </NuxtLink>
+          </a>
         </div>
 
         <nav class="footer-nav" aria-label="Footer">
@@ -116,10 +108,6 @@ function scrollTop() {
         </div>
       </div>
     </div>
-
-    <div class="footer-wordmark" aria-hidden="true">
-      <span>MERIDIAN</span>
-    </div>
   </footer>
 </template>
 
@@ -127,13 +115,10 @@ function scrollTop() {
 .site-footer {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(760px 380px at 82% 0%, rgba(241, 237, 228, 0.05), transparent 62%),
-    radial-gradient(520px 260px at 92% 0%, rgba(240, 82, 31, 0.035), transparent 60%),
-    var(--ink);
+  background: var(--ink);
   color: var(--ivory);
   border-top: 1px solid var(--line-light);
-  padding-top: clamp(2.75rem, 4.5vw, 4rem);
+  padding-top: clamp(3rem, 5vw, 4.5rem);
 }
 
 .site-footer::before {
@@ -152,44 +137,32 @@ function scrollTop() {
   z-index: 1;
 }
 
-.footer-main {
+.footer-top {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: clamp(2.5rem, 6vw, 7rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  gap: clamp(2.5rem, 5vw, 6rem);
   align-items: start;
 }
 
-.footer-label {
-  color: rgba(241, 237, 228, 0.62);
+.footer-statement {
+  margin-top: 1.25rem;
+  max-width: 34ch;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(241, 237, 228, 0.6);
 }
 
 .footer-email {
-  margin-top: 1rem;
-  display: flex;
-  width: fit-content;
-  max-width: 100%;
+  margin-top: 1.35rem;
+  display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-size: clamp(1.35rem, 2vw, 1.9rem);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  font-weight: 500;
-  border-bottom: 1px solid rgba(241, 237, 228, 0.3);
-  padding-bottom: 0.35rem;
-  transition: color 220ms ease, border-color 220ms ease;
-}
-
-.footer-email__icon {
-  flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(241, 237, 228, 0.3);
-  border-radius: 50%;
-  transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 320ms var(--ease);
+  gap: 0.45rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(241, 237, 228, 0.28);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ivory);
+  transition: color 180ms ease, border-color 180ms ease;
 }
 
 .footer-email:hover {
@@ -197,60 +170,10 @@ function scrollTop() {
   border-color: var(--accent);
 }
 
-.footer-email:hover .footer-email__icon {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--ink);
-  transform: rotate(45deg);
-}
-
-.footer-statement {
-  margin-top: 1.1rem;
-  max-width: 38ch;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(241, 237, 228, 0.6);
-}
-
-.footer-cta {
-  margin-top: 1.4rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  min-height: 44px;
-  padding: 0.6rem 1rem;
-  border: 1px solid rgba(241, 237, 228, 0.3);
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--ivory);
-  background: rgba(241, 237, 228, 0.04);
-  transition: background 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease);
-}
-
-.footer-cta svg {
-  transition: transform 220ms var(--ease);
-}
-
-.footer-cta:hover {
-  background: var(--ivory);
-  border-color: var(--ivory);
-  color: var(--ink);
-}
-
-.footer-cta:hover svg {
-  transform: translate(2px, -2px);
-}
-
-.footer-cta:active {
-  transform: scale(0.985);
-}
-
 .footer-nav {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1.5rem, 3vw, 3rem);
-  padding-top: 0.35rem;
 }
 
 .footer-heading {
@@ -258,26 +181,19 @@ function scrollTop() {
   font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(241, 237, 228, 0.45);
+  color: rgba(241, 237, 228, 0.62);
   margin-bottom: 0.85rem;
 }
 
 .footer-link {
   display: flex;
   align-items: center;
-  min-height: 44px;
-  padding-block: 0.15rem;
+  min-height: 40px;
+  padding-block: 0.1rem;
   color: rgba(241, 237, 228, 0.72);
   font-size: 0.88rem;
   text-align: left;
   transition: color 160ms ease, transform 200ms var(--ease);
-}
-
-.footer-link--button {
-  border: 0;
-  background: transparent;
-  width: 100%;
-  padding-inline: 0;
 }
 
 .footer-link:hover {
@@ -318,7 +234,7 @@ function scrollTop() {
 
 .footer-office__address {
   max-width: 26ch;
-  color: rgba(241, 237, 228, 0.5);
+  color: rgba(241, 237, 228, 0.62);
   font-size: 0.8rem;
 }
 
@@ -339,14 +255,14 @@ function scrollTop() {
 .footer-notice {
   font-size: 0.72rem;
   line-height: 1.6;
-  color: rgba(241, 237, 228, 0.42);
+  color: rgba(241, 237, 228, 0.62);
 }
 
 .footer-demo {
   margin-top: 0.35rem;
   font-size: 0.72rem;
   line-height: 1.6;
-  color: rgba(241, 237, 228, 0.42);
+  color: rgba(241, 237, 228, 0.62);
 }
 
 .footer-meta {
@@ -359,7 +275,7 @@ function scrollTop() {
 }
 
 .footer-meta :deep(.locale-switcher__item) {
-  color: rgba(241, 237, 228, 0.55);
+  color: rgba(241, 237, 228, 0.68);
 }
 
 .footer-meta :deep(.locale-switcher__item.is-active),
@@ -370,7 +286,7 @@ function scrollTop() {
 .footer-copy {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
-  color: rgba(241, 237, 228, 0.45);
+  color: rgba(241, 237, 228, 0.62);
   white-space: nowrap;
 }
 
@@ -382,7 +298,7 @@ function scrollTop() {
   border: 0;
   background: transparent;
   font-size: 0.7rem;
-  color: rgba(241, 237, 228, 0.45);
+  color: rgba(241, 237, 228, 0.62);
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 160ms ease;
@@ -407,8 +323,8 @@ function scrollTop() {
 }
 
 .footer-top-link__icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
   border: 1px solid rgba(241, 237, 228, 0.22);
@@ -431,40 +347,6 @@ function scrollTop() {
   transform: translateY(-2px);
 }
 
-.footer-wordmark {
-  position: relative;
-  z-index: 1;
-  margin-top: 0.5rem;
-  border-top: 1px solid rgba(241, 237, 228, 0.08);
-  overflow: hidden;
-  line-height: 0;
-  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
-}
-
-.footer-wordmark span {
-  display: block;
-  width: 100%;
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-size: clamp(3.2rem, 16.5vw, 15rem);
-  line-height: 0.8;
-  letter-spacing: -0.05em;
-  font-weight: 500;
-  white-space: nowrap;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(241, 237, 228, 0.95) 0%, rgba(241, 237, 228, 0.6) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@media (forced-colors: active) {
-  .footer-wordmark span {
-    background: none;
-    color: CanvasText;
-  }
-}
-
 @media (max-width: 1100px) {
   .footer-bottom {
     flex-direction: column;
@@ -476,13 +358,10 @@ function scrollTop() {
   }
 }
 
-@media (max-width: 980px) {
-  .footer-main {
+@media (max-width: 900px) {
+  .footer-top {
     grid-template-columns: 1fr;
-  }
-
-  .footer-nav {
-    gap: 1.5rem;
+    gap: 2.25rem;
   }
 }
 
@@ -512,23 +391,9 @@ function scrollTop() {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
   }
-
-  .footer-wordmark span {
-    font-size: clamp(3rem, 19vw, 6.5rem);
-  }
 }
 
 @media (max-width: 560px) {
-  .footer-email {
-    font-size: clamp(1.35rem, 7vw, 1.9rem);
-    gap: 0.7rem;
-  }
-
-  .footer-email__icon {
-    width: 38px;
-    height: 38px;
-  }
-
   .footer-offices__grid {
     grid-template-columns: 1fr;
   }
