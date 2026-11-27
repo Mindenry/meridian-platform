@@ -250,6 +250,8 @@ docs/          Architecture, API, database, SEO, security, testing, runbook
 - The static demo is a snapshot. Content changes require a new snapshot commit;
   the generation script is `apps/website/scripts/snapshot-demo.mjs`.
 - Demo forms do not persist data.
+- Job records are written in Thai and English; the Chinese site falls back to
+  English for individual roles.
 - Automated accessibility checks and keyboard tests are not a substitute for an
   external WCAG audit.
 - Error tracking is not wired to an external service. Logs stay in the stack.
